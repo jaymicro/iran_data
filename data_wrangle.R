@@ -40,10 +40,17 @@ df_percentcover <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure are
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))
 
 
-sp_name <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(10))%>%
-  names()
+sp_name <- colnames(df_percentcover)
   
 
 df_biomass <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(81:144), col_names = FALSE) %>% 
-  janitor::clean_names() 
+  janitor::clean_names() %>% 
+  select(1:length(sp_name)) %>% 
+  rename_at(colnames(.), ~ sp_name)
+
+library(openxlsx)
+
+data <- read.xlsx(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
+                  sheet = "Exclosure area1", rows = c(10:75),
+                  fillMergedCells = TRUE, colNames = F)
 
