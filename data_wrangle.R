@@ -48,9 +48,14 @@ df_biomass <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
-library(openxlsx)
-
-data <- read.xlsx(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
-                  sheet = "Exclosure area1", rows = c(10:75),
-                  fillMergedCells = TRUE, colNames = F)
+df_plant_metadata <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
+                                  sheet = "Exclosure area1",  fillMergedCells = TRUE, 
+                                  colNames = F) %>% 
+  slice(75:79) %>%
+  #janitor::row_to_names(1) %>% 
+  janitor::clean_names() %>% 
+  janitor::remove_empty("cols") %>% 
+  select(-c(x1)) %>% 
+  select(1:length(sp_name)) %>% 
+  rename_at(colnames(.), ~ sp_name)
 
