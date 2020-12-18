@@ -35,14 +35,15 @@ colnames(GM_GA2) = GM_GA2_col_name
 
 df_extracted_names <- bind_rows(GM_E1,GM_E2,GM_GA1,GM_GA2)
 
-df_percentcover <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(10:74) ) %>% 
+df_percentcover <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))
 
 
+sp_name <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(10))%>%
+  names()
+  
 
-sp_name <- colnames(df_percentcover)
-
-df_biomass <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(80:144) ) %>% 
+df_biomass <- read_excel("Iran-Gillan-Masouleh.xls", sheet = "Exclosure area1", cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() 
 
