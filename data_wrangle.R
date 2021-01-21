@@ -64,6 +64,10 @@ df_plant_metadata <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xls
 
 
 
+###############################################
+###############  Masouleh ####################
+##############################################
+
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
@@ -107,3 +111,21 @@ df_biomass_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cel
   janitor::clean_names() %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+
+#Importing data one sheet at a time. Each df is one unique sheet in the excel
+df_percent_cover_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cell_rows(10:74)) %>% 
+  janitor::clean_names() %>%  
+  select(-c(species_names,above_ground_live_dry_biomass_g:range_class))
+
+
+sp_name <- colnames(df_percent_cover_masouleh_GA2)
+
+##add a column to include site and exclosure treatment
+df_biomass_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cell_rows(81:144), col_names = FALSE) %>% 
+  janitor::clean_names() %>% 
+  select(1:length(sp_name)) %>% 
+  rename_at(colnames(.), ~ sp_name)
+
+
