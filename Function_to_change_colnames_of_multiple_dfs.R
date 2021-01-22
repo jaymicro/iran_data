@@ -26,3 +26,6 @@ df <- list(df_percent_cover_kho_GA1 ,
 
 nw_df <- lapply(df, change_names)  
 
+combined_df_percent_cover_nw <- 
+  bind_rows(nw_df, .id = "column_label") %>% 
+  select(sort(tidyselect::peek_vars()))
