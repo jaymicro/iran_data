@@ -68,6 +68,11 @@ df_plant_metadata <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xls
 ###############  Masouleh ####################
 ##############################################
 
+
+
+###Excel sheet number 1##
+#########################
+
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
@@ -81,6 +86,10 @@ df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cel
   janitor::clean_names() %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+###Excel sheet number 2##
+#########################
 
 
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
@@ -98,6 +107,10 @@ df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cel
   rename_at(colnames(.), ~ sp_name)
 
 
+###Excel sheet number 3##
+#########################
+
+
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
@@ -113,6 +126,9 @@ df_biomass_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cel
   rename_at(colnames(.), ~ sp_name)
 
 
+
+###Excel sheet number 4##
+#########################
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cell_rows(10:74)) %>% 
