@@ -3,7 +3,7 @@ library(tidyverse)
 change_names <- function(x){
   nw_name <- str_extract(colnames(x), "^[a-z]+_[a-z]+")
   names(x) <- nw_name
-  return(x)
+  return(as.data.frame(x))
 }
 
 df <- list(df_percent_cover_kho_GA1 ,
