@@ -460,8 +460,6 @@ df_per_cover <- as.vector(str_subset(df_all, pattern = fixed("percent_cover")))
 
 
 
-colnames(combined_df_percent_cover)
-
 df_percent_cover_kho_GA1_name <- str_extract(colnames(df_percent_cover_kho_GA1), "^[a-z]+_[a-z]+")
 colnames(df_percent_cover_kho_GA1) = df_percent_cover_kho_GA1_name
 
@@ -478,13 +476,13 @@ df_percent_cover_masouleh_EA1_name <- str_extract(colnames(df_percent_cover_maso
 colnames(df_percent_cover_masouleh_EA1) =  df_percent_cover_masouleh_EA1_name
 
 df_percent_cover_masouleh_GA1_name <- str_extract(colnames(df_percent_cover_masouleh_GA1), "^[a-z]+_[a-z]+")
-colnames(df_percent_cover_masouleh_GA1) = df_percent_cover_masouleh_GA1
+colnames(df_percent_cover_masouleh_GA1) =  df_percent_cover_masouleh_GA1_name
 
 df_percent_cover_masouleh_GA2_name <- str_extract(colnames(df_percent_cover_masouleh_GA2), "^[a-z]+_[a-z]+")
-colnames(df_percent_cover_masouleh_GA2) = df_percent_cover_masouleh_GA2
+colnames(df_percent_cover_masouleh_GA2) =  df_percent_cover_masouleh_GA2_name
 
 df_percent_cover_maz_java_EA1_name <- str_extract(colnames(df_percent_cover_maz_java_EA1), "^[a-z]+_[a-z]+")
-colnames(df_percent_cover_maz_java_EA1) = df_percent_cover_maz_java_EA1
+colnames(df_percent_cover_maz_java_EA1) =  df_percent_cover_maz_java_EA1_name
 
 df_percent_cover_maz_java_GA1_name <- str_extract(colnames(df_percent_cover_maz_java_GA1), "^[a-z]+_[a-z]+")
 colnames(df_percent_cover_maz_java_GA1) =  df_percent_cover_maz_java_GA1_name
