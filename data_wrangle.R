@@ -84,6 +84,7 @@ sp_name <- colnames(df_percent_cover_masouleh_EA1)
 ##add a column to include site and exclosure treatment
 df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
@@ -103,6 +104,7 @@ sp_name <- colnames(df_percent_cover_masouleh_EA2)
 ##add a column to include site and exclosure treatment
 df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
@@ -122,6 +124,7 @@ sp_name <- colnames(df_percent_cover_masouleh_GA1)
 ##add a column to include site and exclosure treatment
 df_biomass_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
@@ -141,15 +144,17 @@ sp_name <- colnames(df_percent_cover_masouleh_GA2)
 ##add a column to include site and exclosure treatment
 df_biomass_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
 
 ###############################################
-###############  Ramian ####################
+###############  Ramian ######################
 ##############################################
 
-
+###Excel sheet number 1##
+#########################
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 1, cell_rows(10:74)) %>% 
@@ -162,9 +167,13 @@ sp_name <- colnames(df_percent_cover_ramian_GA1)
 ##add a column to include site and exclosure treatment
 df_biomass_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 1, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
+
+###Excel sheet number 2##
+#########################
 
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
@@ -178,6 +187,7 @@ sp_name <- colnames(df_percent_cover_ramian_GA2)
 ##add a column to include site and exclosure treatment
 df_biomass_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
@@ -185,6 +195,9 @@ df_biomass_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_
 ############################################################
 ###############  Mazandaran-Javaherdeh  ####################
 ############################################################
+
+###Excel sheet number 1##
+#########################
 
 
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
@@ -198,10 +211,13 @@ sp_name <- colnames(df_percent_cover_maz_java_EA1)
 ##add a column to include site and exclosure treatment
 df_biomass_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 1, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
 
+###Excel sheet number 2##
+#########################
 
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
@@ -215,10 +231,13 @@ sp_name <- colnames(df_percent_cover_maz_java_GA1)
 ##add a column to include site and exclosure treatment
 df_biomass_maz_java_GA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
 
+###Excel sheet number 3##
+#########################
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 3, cell_rows(10:74)) %>% 
@@ -231,6 +250,7 @@ sp_name <- colnames(df_percent_cover_maz_java_GA2)
 ##add a column to include site and exclosure treatment
 df_biomass_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 3, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
@@ -240,6 +260,10 @@ df_biomass_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
 ############################################################
 ###############  Mazandaran-Polour ####################
 ############################################################
+
+
+###Excel sheet number 1##
+#########################
 
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
@@ -253,8 +277,13 @@ sp_name <- colnames(df_percent_cover_maz_po_GA1)
 ##add a column to include site and exclosure treatment
 df_biomass_maz_po_GA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+###Excel sheet number 2##
+#########################
 
 
 
@@ -269,8 +298,16 @@ sp_name <- colnames(df_percent_cover_maz_po_GA2)
 ##add a column to include site and exclosure treatment
 df_biomass_maz_po_GA2 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+
+###Excel sheet number 3##
+#########################
+
+
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cell_rows(10:74)) %>% 
@@ -283,6 +320,7 @@ sp_name <- colnames(df_percent_cover_maz_po_EA1)
 ##add a column to include site and exclosure treatment
 df_biomass_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
 
@@ -291,6 +329,11 @@ df_biomass_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cel
 ############################################################
 ###############  Khorasan ##################################
 ############################################################
+
+
+
+###Excel sheet number 1##
+#########################
 
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
@@ -304,8 +347,14 @@ sp_name <- colnames(df_percent_cover_kho_GA1)
 ##add a column to include site and exclosure treatment
 df_biomass_kho_GA1 <- read_xlsx("Iran-North Khorasan.xlsx", sheet =1, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+###Excel sheet number 2##
+#########################
+
 
 #Importing data one sheet at a time. Each df is one unique sheet in the exce
 df_percent_cover_kho_GA2 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 2, cell_rows(10:74)) %>% 
@@ -318,8 +367,15 @@ sp_name <- colnames(df_percent_cover_kho_GA2)
 ##add a column to include site and exclosure treatment
 df_biomass_kho_GA2 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+###Excel sheet number 3##
+#########################
+
+
 
 #Importing data one sheet at a time. Each df is one unique sheet in the exce
 df_percent_cover_kho_GA3 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 3, cell_rows(10:74)) %>% 
@@ -332,8 +388,15 @@ sp_name <- colnames(df_percent_cover_kho_GA3)
 ##add a column to include site and exclosure treatment
 df_biomass_kho_GA3 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 3, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
+
+
+###Excel sheet number 4##
+#########################
+
+
 
 #Importing data one sheet at a time. Each df is one unique sheet in the exce
 df_percent_cover_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows(10:74)) %>% 
@@ -346,5 +409,6 @@ sp_name <- colnames(df_percent_cover_kho_GA4)
 ##add a column to include site and exclosure treatment
 df_biomass_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows(81:144), col_names = FALSE) %>% 
   janitor::clean_names() %>% 
+  select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)
