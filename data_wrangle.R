@@ -153,7 +153,7 @@ df_biomass_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_
 
 
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
-df_percent_cover_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cell_rows(10:74)) %>% 
+df_percent_cover_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
   mutate(id_id = rep("maz_java_EA1", times = nrow(.)))
