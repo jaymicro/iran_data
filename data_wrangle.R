@@ -96,7 +96,7 @@ df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cel
 
 
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
-df_percent_cover_maz_java_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
   mutate(id_id = rep("masouleh_EA2", times = nrow(.)))
@@ -121,7 +121,7 @@ df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cel
 df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_GA3", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_masouleh_GA1)
@@ -142,7 +142,8 @@ df_biomass_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cel
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
 df_percent_cover_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
-  select(-c(species_names,above_ground_live_dry_biomass_g:range_class))
+  select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
+  mutate(id_id = rep("masouleh_GA2", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_masouleh_GA2)
@@ -153,7 +154,7 @@ df_biomass_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA2", times = nrow(.)))
 
 
 ###############################################
@@ -475,9 +476,6 @@ colnames( df_percent_cover_kho_GA4) =  df_percent_cover_kho_GA4_name
 df_percent_cover_masouleh_EA1_name <- str_extract(colnames(df_percent_cover_masouleh_EA1), "^[a-z]+_[a-z]+")
 colnames(df_percent_cover_masouleh_EA1) =  df_percent_cover_masouleh_EA1_name
 
-df_percent_cover_maz_java_GA1_name <- str_extract(colnames(df_percent_cover_maz_java_GA1), "^[a-z]+_[a-z]+")
-colnames(df_percent_cover_maz_java_GA1) = df_percent_cover_maz_java_GA1
-
 df_percent_cover_masouleh_GA1_name <- str_extract(colnames(df_percent_cover_masouleh_GA1), "^[a-z]+_[a-z]+")
 colnames(df_percent_cover_masouleh_GA1) = df_percent_cover_masouleh_GA1
 
@@ -532,4 +530,5 @@ combined_df_percent_cover <- bind_rows(df_percent_cover_kho_GA1 ,
                                        df_percent_cover_ramian_GA2 ,
                                        df_percent_cover_masouleh_EA1)%>% 
   select(sort(tidyselect::peek_vars()))
+
 
