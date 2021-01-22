@@ -452,3 +452,21 @@ df_biomass_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows
 ######################################    Combine the datasets  ##############################################################
 ##############################################################################################################################
 
+
+df_all <- ls()
+df_per_cover <- as.vector(str_subset(df_all, pattern = fixed("percent_cover")))
+
+combined_df_percent_cover <- bind_rows(df_percent_cover_kho_GA1 , df_percent_cover_kho_GA2 ,
+          df_percent_cover_kho_GA3 , df_percent_cover_kho_GA4 , df_percent_cover_masouleh_EA1 ,
+          df_percent_cover_masouleh_EA2,  df_percent_cover_masouleh_GA1 ,
+          df_percent_cover_masouleh_GA2 , df_percent_cover_maz_java_EA1 , df_percent_cover_maz_java_GA1 ,
+          df_percent_cover_maz_java_GA2 ,df_percent_cover_maz_po_EA1 ,df_percent_cover_maz_po_GA1 ,
+          df_percent_cover_maz_po_GA2 ,df_percent_cover_ramian_GA1 ,df_percent_cover_ramian_GA2 ,
+           df_percent_cover_masouleh_EA1)%>% 
+  select(sort(tidyselect::peek_vars()))
+
+
+colnames(combined_df_percent_cover)
+
+
+
