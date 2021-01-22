@@ -466,3 +466,78 @@ combined_df_percent_cover <- bind_rows(df_percent_cover_kho_GA1 ,
   select(sort(tidyselect::peek_vars()))
 
 
+#-----Biomass------
+
+df_biomass_kho_GA1_name <- str_extract(colnames(df_biomass_kho_GA1), "^[a-z]+_[a-z]+")
+colnames(df_biomass_kho_GA1) = df_biomass_kho_GA1_name
+
+df_biomass_kho_GA2_name <- str_extract(colnames(df_biomass_kho_GA2), "^[a-z]+_[a-z]+")
+colnames(df_biomass_kho_GA2) = df_biomass_kho_GA2_name
+
+df_biomass_kho_GA3_name <- str_extract(colnames( df_biomass_kho_GA3), "^[a-z]+_[a-z]+")
+colnames( df_biomass_kho_GA3) =  df_biomass_kho_GA3_name
+
+df_biomass_kho_GA4_name <- str_extract(colnames(df_biomass_kho_GA4), "^[a-z]+_[a-z]+")
+colnames( df_biomass_kho_GA4) =  df_biomass_kho_GA4_name
+
+df_biomass_masouleh_EA1_name <- str_extract(colnames(df_biomass_masouleh_EA1), "^[a-z]+_[a-z]+")
+colnames(df_biomass_masouleh_EA1) =  df_biomass_masouleh_EA1_name
+
+df_biomass_masouleh_GA1_name <- str_extract(colnames(df_biomass_masouleh_GA1), "^[a-z]+_[a-z]+")
+colnames(df_biomass_masouleh_GA1) =  df_biomass_masouleh_GA1_name
+
+df_biomass_masouleh_GA2_name <- str_extract(colnames(df_biomass_masouleh_GA2), "^[a-z]+_[a-z]+")
+colnames(df_biomass_masouleh_GA2) =  df_biomass_masouleh_GA2_name
+
+df_biomass_maz_java_EA1_name <- str_extract(colnames(df_biomass_maz_java_EA1), "^[a-z]+_[a-z]+")
+colnames(df_biomass_maz_java_EA1) =  df_biomass_maz_java_EA1_name
+
+df_biomass_maz_java_GA1_name <- str_extract(colnames(df_biomass_maz_java_GA1), "^[a-z]+_[a-z]+")
+colnames(df_biomass_maz_java_GA1) =  df_biomass_maz_java_GA1_name
+
+df_biomass_maz_java_GA2_name <- str_extract(colnames(df_biomass_maz_java_GA2), "^[a-z]+_[a-z]+")
+colnames(df_biomass_maz_java_GA2) =  df_biomass_maz_java_GA2_name
+
+df_biomass_maz_po_EA1_name <- str_extract(colnames( df_biomass_maz_po_EA1), "^[a-z]+_[a-z]+")
+colnames( df_biomass_maz_po_EA1) =   df_biomass_maz_po_EA1_name
+
+
+df_biomass_maz_po_GA1_name <- str_extract(colnames( df_biomass_maz_po_GA1), "^[a-z]+_[a-z]+")
+colnames( df_biomass_maz_po_GA1) =   df_biomass_maz_po_GA1_name
+
+df_biomass_maz_po_GA2_name <- str_extract(colnames( df_biomass_maz_po_GA2), "^[a-z]+_[a-z]+")
+colnames( df_biomass_maz_po_GA2) =   df_biomass_maz_po_GA2_name
+
+df_biomass_ramian_GA1_name <- str_extract(colnames( df_biomass_ramian_GA1), "^[a-z]+_[a-z]+")
+colnames( df_biomass_ramian_GA1) =   df_biomass_ramian_GA1_name
+
+
+df_biomass_ramian_GA2_name <- str_extract(colnames( df_biomass_ramian_GA2), "^[a-z]+_[a-z]+")
+colnames( df_biomass_ramian_GA2) =   df_biomass_ramian_GA2_name
+
+df_biomass_masouleh_EA1_name <- str_extract(colnames( df_biomass_masouleh_EA1), "^[a-z]+_[a-z]+")
+colnames( df_biomass_masouleh_EA1) =   df_biomass_masouleh_EA1_name
+
+
+combined_df_biomass <- bind_rows(df_biomass_kho_GA1 ,
+                                       df_biomass_kho_GA2 ,
+                                       df_biomass_kho_GA3 ,
+                                       df_biomass_kho_GA4 , 
+                                       df_biomass_masouleh_EA1 ,
+                                       df_biomass_maz_java_GA1,  
+                                       df_biomass_masouleh_GA1 ,
+                                       df_biomass_masouleh_GA2 ,
+                                       df_biomass_maz_java_EA1 ,
+                                       df_biomass_maz_java_GA1 ,
+                                       df_biomass_maz_java_GA2 ,
+                                       df_biomass_maz_po_EA1 ,
+                                       df_biomass_maz_po_GA1 ,
+                                       df_biomass_maz_po_GA2 ,
+                                       df_biomass_ramian_GA1 ,
+                                       df_biomass_ramian_GA2 ,
+                                       df_biomass_masouleh_EA1)%>% 
+  select(sort(tidyselect::peek_vars()))
+
+write.csv(combined_df_biomass, file="combined_df_biomass.csv")
+write.csv(combined_df_percent_cover, file="combined_df_percent_cover.csv")
+
