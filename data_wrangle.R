@@ -77,7 +77,7 @@ df_plant_metadata <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xls
 df_percent_cover_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class)) %>% 
-  mutate(id = rep("masouleh_EA1", times = nrow(.)))
+  mutate(id_id = rep("masouleh_EA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_masouleh_EA1)
@@ -88,7 +88,7 @@ df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("masouleh_EA1", times = nrow(.)))
+  mutate(id_id = rep("masouleh_EA1", times = nrow(.)))
 
 
 ###Excel sheet number 2##
@@ -96,13 +96,13 @@ df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cel
 
 
 ##Importing data one sheet at a time. Each df is one unique sheet in the excel
-df_percent_cover_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_maz_java_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id = rep("masouleh_EA2", times = nrow(.)))
+  mutate(id_id = rep("masouleh_EA2", times = nrow(.)))
 
 
-sp_name <- colnames(df_percent_cover_masouleh_EA2)
+sp_name <- colnames(df_percent_cover_maz_java_GA1)
 
 ##add a column to include site and exclosure treatment
 df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
@@ -110,7 +110,7 @@ df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name) %>% 
-  mutate(id = rep("masouleh_EA2", times = nrow(.)))
+  mutate(id_id = rep("masouleh_EA2", times = nrow(.)))
 
 
 ###Excel sheet number 3##
@@ -121,7 +121,7 @@ df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cel
 df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id = rep("masouleh_GA3", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA3", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_masouleh_GA1)
@@ -132,7 +132,7 @@ df_biomass_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("masouleh_GA1", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
 
 
 
@@ -153,7 +153,7 @@ df_biomass_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("masouleh_GA1", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
 
 
 ###############################################
@@ -167,7 +167,7 @@ df_biomass_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cel
 df_percent_cover_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("ramian_GA1", times = nrow(.)))
+  mutate(id_id = rep("ramian_GA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_ramian_GA1)
@@ -178,7 +178,7 @@ df_biomass_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 1, cell_
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("ramian_GA1", times = nrow(.)))
+  mutate(id_id = rep("ramian_GA1", times = nrow(.)))
 
 
 ###Excel sheet number 2##
@@ -189,7 +189,7 @@ df_biomass_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 1, cell_
 df_percent_cover_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("ramian_GA2", times = nrow(.)))
+  mutate(id_id = rep("ramian_GA2", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_ramian_GA2)
@@ -200,7 +200,7 @@ df_biomass_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("ramian_GA2", times = nrow(.)))
+  mutate(id_id = rep("ramian_GA2", times = nrow(.)))
 
 
 ############################################################
@@ -215,7 +215,7 @@ df_biomass_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_
 df_percent_cover_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("maz_java_EA1", times = nrow(.)))
+  mutate(id_id = rep("maz_java_EA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_maz_java_EA1)
@@ -226,7 +226,7 @@ df_biomass_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name) %>% 
-  mutate(id = rep("maz_java_EA1", times = nrow(.)))
+  mutate(id_id = rep("maz_java_EA1", times = nrow(.)))
 
 
 ###Excel sheet number 2##
@@ -237,7 +237,7 @@ df_biomass_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
 df_percent_cover_maz_java_GA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g)) %>% 
-  mutate(id = rep("maz_java_GA1", times = nrow(.)))
+  mutate(id_id = rep("maz_java_GA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_maz_java_GA1)
@@ -248,7 +248,7 @@ df_biomass_maz_java_GA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("maz_java_GA1", times = nrow(.)))
+  mutate(id_id = rep("maz_java_GA1", times = nrow(.)))
 
 
 ###Excel sheet number 3##
@@ -258,7 +258,7 @@ df_biomass_maz_java_GA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
 df_percent_cover_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("maz_java_GA2", times = nrow(.)))
+  mutate(id_id = rep("maz_java_GA2", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_maz_java_GA2)
@@ -269,7 +269,7 @@ df_biomass_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("maz_java_GA2", times = nrow(.)))
+  mutate(id_id = rep("maz_java_GA2", times = nrow(.)))
 
 
 
@@ -287,7 +287,7 @@ df_biomass_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", she
 df_percent_cover_maz_po_GA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("maz_po_GA1", times = nrow(.)))
+  mutate(id_id = rep("maz_po_GA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_maz_po_GA1)
@@ -298,7 +298,7 @@ df_biomass_maz_po_GA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("maz_po_GA1", times = nrow(.)))
+  mutate(id_id = rep("maz_po_GA1", times = nrow(.)))
 
 
 ###Excel sheet number 2##
@@ -310,7 +310,7 @@ df_biomass_maz_po_GA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cel
 df_percent_cover_maz_po_GA2 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("maz_po_GA2", times = nrow(.)))
+  mutate(id_id = rep("maz_po_GA2", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_maz_po_GA2)
@@ -321,7 +321,7 @@ df_biomass_maz_po_GA2 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 2, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("maz_po_GA2", times = nrow(.)))
+  mutate(id_id = rep("maz_po_GA2", times = nrow(.)))
 
 
 
@@ -334,7 +334,7 @@ df_biomass_maz_po_GA2 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 2, cel
 df_percent_cover_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id = rep("maz_po_EA1", times = nrow(.)))
+  mutate(id_id = rep("maz_po_EA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_maz_po_EA1)
@@ -345,7 +345,7 @@ df_biomass_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cel
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("maz_po_EA1", times = nrow(.)))
+  mutate(id_id = rep("maz_po_EA1", times = nrow(.)))
 
 
 
@@ -363,7 +363,7 @@ df_biomass_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cel
 df_percent_cover_kho_GA1 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g_m2:litter_dry_biomass_g_m2))%>% 
-  mutate(id = rep("kho_GA1", times = nrow(.)))
+  mutate(id_id = rep("kho_GA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_kho_GA1)
@@ -374,7 +374,7 @@ df_biomass_kho_GA1 <- read_xlsx("Iran-North Khorasan.xlsx", sheet =1, cell_rows(
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("kho_GA1", times = nrow(.)))
+  mutate(id_id = rep("kho_GA1", times = nrow(.)))
 
 
 ###Excel sheet number 2##
@@ -385,7 +385,7 @@ df_biomass_kho_GA1 <- read_xlsx("Iran-North Khorasan.xlsx", sheet =1, cell_rows(
 df_percent_cover_kho_GA2 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g_m2))%>% 
-  mutate(id = rep("kho_GA2", times = nrow(.)))
+  mutate(id_id = rep("kho_GA2", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_kho_GA2)
@@ -396,7 +396,7 @@ df_biomass_kho_GA2 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 2, cell_rows
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("kho_GA2", times = nrow(.)))
+  mutate(id_id = rep("kho_GA2", times = nrow(.)))
 
 
 ###Excel sheet number 3##
@@ -408,7 +408,7 @@ df_biomass_kho_GA2 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 2, cell_rows
 df_percent_cover_kho_GA3 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g_m2))%>% 
-  mutate(id = rep("kho_GA3", times = nrow(.)))
+  mutate(id_id = rep("kho_GA3", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_kho_GA3)
@@ -419,7 +419,7 @@ df_biomass_kho_GA3 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 3, cell_rows
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("kho_GA3", times = nrow(.)))
+  mutate(id_id = rep("kho_GA3", times = nrow(.)))
 
 
 ###Excel sheet number 4##
@@ -431,7 +431,7 @@ df_biomass_kho_GA3 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 3, cell_rows
 df_percent_cover_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g_m2))%>% 
-  mutate(id = rep("kho_GA4", times = nrow(.)))
+  mutate(id_id = rep("kho_GA4", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_kho_GA4)
@@ -442,7 +442,7 @@ df_biomass_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name)%>% 
-  mutate(id = rep("kho_GA4", times = nrow(.)))
+  mutate(id_id = rep("kho_GA4", times = nrow(.)))
 
 
 
@@ -456,17 +456,80 @@ df_biomass_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows
 df_all <- ls()
 df_per_cover <- as.vector(str_subset(df_all, pattern = fixed("percent_cover")))
 
-combined_df_percent_cover <- bind_rows(df_percent_cover_kho_GA1 , df_percent_cover_kho_GA2 ,
-          df_percent_cover_kho_GA3 , df_percent_cover_kho_GA4 , df_percent_cover_masouleh_EA1 ,
-          df_percent_cover_masouleh_EA2,  df_percent_cover_masouleh_GA1 ,
-          df_percent_cover_masouleh_GA2 , df_percent_cover_maz_java_EA1 , df_percent_cover_maz_java_GA1 ,
-          df_percent_cover_maz_java_GA2 ,df_percent_cover_maz_po_EA1 ,df_percent_cover_maz_po_GA1 ,
-          df_percent_cover_maz_po_GA2 ,df_percent_cover_ramian_GA1 ,df_percent_cover_ramian_GA2 ,
-           df_percent_cover_masouleh_EA1)%>% 
-  select(sort(tidyselect::peek_vars()))
 
 
 colnames(combined_df_percent_cover)
 
+df_percent_cover_kho_GA1_name <- str_extract(colnames(df_percent_cover_kho_GA1), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_kho_GA1) = df_percent_cover_kho_GA1_name
 
+df_percent_cover_kho_GA2_name <- str_extract(colnames(df_percent_cover_kho_GA2), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_kho_GA2) = df_percent_cover_kho_GA2_name
+
+df_percent_cover_kho_GA3_name <- str_extract(colnames( df_percent_cover_kho_GA3), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_kho_GA3) =  df_percent_cover_kho_GA3_name
+
+df_percent_cover_kho_GA4_name <- str_extract(colnames(df_percent_cover_kho_GA4), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_kho_GA4) =  df_percent_cover_kho_GA4_name
+
+df_percent_cover_masouleh_EA1_name <- str_extract(colnames(df_percent_cover_masouleh_EA1), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_masouleh_EA1) =  df_percent_cover_masouleh_EA1_name
+
+df_percent_cover_maz_java_GA1_name <- str_extract(colnames(df_percent_cover_maz_java_GA1), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_maz_java_GA1) = df_percent_cover_maz_java_GA1
+
+df_percent_cover_masouleh_GA1_name <- str_extract(colnames(df_percent_cover_masouleh_GA1), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_masouleh_GA1) = df_percent_cover_masouleh_GA1
+
+df_percent_cover_masouleh_GA2_name <- str_extract(colnames(df_percent_cover_masouleh_GA2), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_masouleh_GA2) = df_percent_cover_masouleh_GA2
+
+df_percent_cover_maz_java_EA1_name <- str_extract(colnames(df_percent_cover_maz_java_EA1), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_maz_java_EA1) = df_percent_cover_maz_java_EA1
+
+df_percent_cover_maz_java_GA1_name <- str_extract(colnames(df_percent_cover_maz_java_GA1), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_maz_java_GA1) =  df_percent_cover_maz_java_GA1_name
+
+df_percent_cover_maz_java_GA2_name <- str_extract(colnames(df_percent_cover_maz_java_GA2), "^[a-z]+_[a-z]+")
+colnames(df_percent_cover_maz_java_GA2) =  df_percent_cover_maz_java_GA2_name
+
+df_percent_cover_maz_po_EA1_name <- str_extract(colnames( df_percent_cover_maz_po_EA1), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_maz_po_EA1) =   df_percent_cover_maz_po_EA1_name
+
+
+df_percent_cover_maz_po_GA1_name <- str_extract(colnames( df_percent_cover_maz_po_GA1), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_maz_po_GA1) =   df_percent_cover_maz_po_GA1_name
+
+df_percent_cover_maz_po_GA2_name <- str_extract(colnames( df_percent_cover_maz_po_GA2), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_maz_po_GA2) =   df_percent_cover_maz_po_GA2_name
+
+df_percent_cover_ramian_GA1_name <- str_extract(colnames( df_percent_cover_ramian_GA1), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_ramian_GA1) =   df_percent_cover_ramian_GA1_name
+
+
+df_percent_cover_ramian_GA2_name <- str_extract(colnames( df_percent_cover_ramian_GA2), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_ramian_GA2) =   df_percent_cover_ramian_GA2_name
+
+df_percent_cover_masouleh_EA1_name <- str_extract(colnames( df_percent_cover_masouleh_EA1), "^[a-z]+_[a-z]+")
+colnames( df_percent_cover_masouleh_EA1) =   df_percent_cover_masouleh_EA1_name
+
+
+combined_df_percent_cover <- bind_rows(df_percent_cover_kho_GA1 ,
+                                       df_percent_cover_kho_GA2 ,
+                                       df_percent_cover_kho_GA3 ,
+                                       df_percent_cover_kho_GA4 , 
+                                       df_percent_cover_masouleh_EA1 ,
+                                       df_percent_cover_maz_java_GA1,  
+                                       df_percent_cover_masouleh_GA1 ,
+                                       df_percent_cover_masouleh_GA2 ,
+                                       df_percent_cover_maz_java_EA1 ,
+                                       df_percent_cover_maz_java_GA1 ,
+                                       df_percent_cover_maz_java_GA2 ,
+                                       df_percent_cover_maz_po_EA1 ,
+                                       df_percent_cover_maz_po_GA1 ,
+                                       df_percent_cover_maz_po_GA2 ,
+                                       df_percent_cover_ramian_GA1 ,
+                                       df_percent_cover_ramian_GA2 ,
+                                       df_percent_cover_masouleh_EA1)%>% 
+  select(sort(tidyselect::peek_vars()))
 
