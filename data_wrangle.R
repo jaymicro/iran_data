@@ -393,11 +393,7 @@ df_biomass_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows
 ######################################    Combine the datasets  ##############################################################
 ##############################################################################################################################
 
-
-df_all <- ls()
-df_per_cover <- as.vector(str_subset(df_all, pattern = fixed("percent_cover")))
-
-
+#-----Percent cover------
 
 df_percent_cover_kho_GA1_name <- str_extract(colnames(df_percent_cover_kho_GA1), "^[a-z]+_[a-z]+")
 colnames(df_percent_cover_kho_GA1) = df_percent_cover_kho_GA1_name
