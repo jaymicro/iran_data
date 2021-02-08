@@ -15,6 +15,7 @@ df_pc <- df %>%
 
 
 
+
 metadata <- df %>% 
   select(id_id) %>% 
   mutate(         treatment = ifelse(grepl("GA", .$id_id), "grazing", "exclosure"),
