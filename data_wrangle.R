@@ -38,10 +38,9 @@ df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cel
 df_percent_cover_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_EA2", times = nrow(.)))
+  mutate(id_id = rep("masouleh_WORK", times = nrow(.)))
 
-
-sp_name <- colnames(df_percent_cover_maz_java_GA1)
+sp_name <- colnames(df_percent_cover_masouleh_EA2)
 
 ##add a column to include site and exclosure treatment
 df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(81:144), col_names = FALSE) %>% 
@@ -50,6 +49,7 @@ df_biomass_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cel
   select(1:length(sp_name)) %>% 
   rename_at(colnames(.), ~ sp_name) %>% 
   mutate(id_id = rep("masouleh_EA2", times = nrow(.)))
+
 
 
 ###Excel sheet number 3##
