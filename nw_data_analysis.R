@@ -43,10 +43,12 @@ div_metric <- data.frame(
   simpson_index = diversity(as.matrix(df_pc), index = "simpson", MARGIN = 1, base = exp(1)),
   biomass = rowSums(df_biomass_clean))
 
+div_metric$evenness= div_metric$Shannon_index/log(div_metric$species_richness)
 
 kruskal.test(div_metric$species_richness ~ metadata$treatment)
 kruskal.test(div_metric$Shannon_index ~ metadata$treatment)
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
+kruskal.test(div_metric$evenness ~ metadata$treatment)
 
 mod1 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
 anova(mod1)
@@ -83,6 +85,33 @@ plot(resid(mod2))
 shapiro.test(resid(mod2))
 
 mod3 <- lmer(log1p(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
+anova(mod3)
+plot(resid(mod3))
+shapiro.test(resid(mod3))
+
+
+#-------------berger-parker--------------------
+library("diverse")
+
+bg=diversity(t(df_pc), type='berger-parker', category_row=T)%>%
+  arrange(rownames(.))
+
+kruskal.test(bg$berger.parker.D ~ metadata$treatment)
+
+mod1 <- lmer((bg$berger.parker.D) ~ metadata$treatment + (1|metadata$site))
+anova(mod1)
+plot(resid(mod1))
+shapiro.test(resid(mod1))
+qqnorm(resid(mod1))
+qqline(resid(mod1))
+
+
+mod2 <- lmer((bg$berger.parker.D) ~ metadata$treatment + (1|metadata$id_id))
+anova(mod2)
+plot(resid(mod2))
+shapiro.test(resid(mod2))
+
+mod3 <- lmer((bg$berger.parker.D) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
