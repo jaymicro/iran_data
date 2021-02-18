@@ -6,8 +6,8 @@ library(lmerTest)
 library(ape)
 
 
-df_percentcover<- read.csv("combined_df_percent_cover.csv",  row.names = 1)
-df_biomass<- read.csv("combined_df_biomass.csv",  row.names = 1)
+df_percentcover<- read.csv("percentcover_correct.csv",  row.names = 1)
+df_biomass<- read.csv("biomass_correct.csv",  row.names = 1)
 
 df_pc <- df_percentcover %>% 
   replace(is.na(.), 0) %>% 
@@ -48,7 +48,7 @@ kruskal.test(div_metric$species_richness ~ metadata$treatment)
 kruskal.test(div_metric$Shannon_index ~ metadata$treatment)
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
 
-mod1 <- lmer(log1p(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
+mod1 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
 anova(mod1)
 plot(resid(mod1))
 shapiro.test(resid(mod1))
@@ -56,12 +56,12 @@ qqnorm(resid(mod1))
 qqline(resid(mod1))
 
 
-mod2 <- lmer(log1p(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id))
+mod2 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id))
 anova(mod2)
 plot(resid(mod2))
 shapiro.test(resid(mod2))
 
-mod3 <- lmer(log1p(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
+mod3 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
@@ -69,7 +69,7 @@ shapiro.test(resid(mod3))
 #########################################################################################################
 ########                        Simpson index
 ##########################################################################################
-mod1 <- lmer(div_metric$simpson_index ~ metadata$treatment + (1|metadata$site))
+mod1 <- lmer((div_metric$simpson_index) ~ metadata$treatment + (1|metadata$site))
 anova(mod1)
 plot(resid(mod1))
 shapiro.test(resid(mod1))
