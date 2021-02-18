@@ -246,3 +246,12 @@ dist_bray <- vegdist(df_pc)
 
 set.seed(1111)
 beta_div <- metaMDS(dist_bray, k =2, trymax = 999)
+
+
+# biomass vs dominance ----------------------------------------------------
+
+mod_PD <- lmer(div_metric$biomass ~ div_metric$simpson_index + (1|metadata$id_id))
+plot(resid(mod_PD))
+
+
+
