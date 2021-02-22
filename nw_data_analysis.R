@@ -12,17 +12,13 @@ df_biomass<- read.csv("biomass_correct.csv",  row.names = 1)
 
 df_pc <- df_percentcover %>% 
   replace(is.na(.), 0) %>% 
-  select(-c(id_id)) %>% 
-  slice(-c(252,315,379, 489,505,128, 192, 256, 576,696, 704,768,822, 885, 886, 832,896,960,1024))
+  select(-c(id_id))
 
 
 df_biomass_clean <- df_biomass %>% 
   replace(is.na(.), 0) %>% 
-  select(-c(id_id)) %>% 
-  slice(-c(252,315,379, 489,505,128, 192, 256, 576,696, 704,768,822, 885, 886, 832,896,960,1024))
+  select(-c(id_id))
 
-which(rowSums(df_biomass_clean) ==0)
-which(rowSums(df_pc) ==0)
 
 metadata <- df_percentcover %>% 
   select(id_id) %>% 
@@ -30,9 +26,19 @@ metadata <- df_percentcover %>%
                   site = ifelse(grepl("kho", .$id_id), "kho",
                                 ifelse(grepl("maz_po", .$id_id), "maz_po",
                                        ifelse(grepl("masouleh", .$id_id), "masouleh",
-                                              ifelse(grepl("maz_java", .$id_id), "maz_java","ramian"))))) %>% 
-  slice(-c(252,315,379, 489,505,128, 192, 256, 576,696, 704,768,822, 885, 886, 832,896,960,1024))
+                                              ifelse(grepl("maz_java", .$id_id), "maz_java","ramian")))))
 
+which(rowSums(df_biomass_clean) == 0)
+which(rowSums(df_pc) == 0)
+
+df_pc <- df_pc %>% 
+  slice(-c(128,  192, 254, 256, 318, 382, 489, 505, 576, 702, 704,  768, 830, 832, 894, 895, 896,  960, 1024))
+
+df_biomass_clean <- df_biomass_clean %>% 
+  slice(-c(128,  192, 254, 256, 318, 382, 489, 505, 576, 702, 704,  768, 830, 832, 894, 895, 896,  960, 1024))
+
+which(rowSums(df_biomass_clean) == 0)
+which(rowSums(df_pc) == 0)
 
 
 ###########################################################################################
