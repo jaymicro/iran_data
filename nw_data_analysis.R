@@ -19,7 +19,7 @@ df_pc <- df_percentcover %>%
 df_biomass_clean <- df_biomass %>% 
   replace(is.na(.), 0) %>% 
   select(-c(id_id)) %>% 
-  slice(-c(489,505,128, 192, 256, 576, 704,768,832,896,960,1024))
+  slice(-c(252,315,379, 489,505,128, 192, 256, 576,696, 704,768,822, 885, 886, 832,896,960,1024))
 
 which(rowSums(df_biomass_clean) ==0)
 which(rowSums(df_pc) ==0)
