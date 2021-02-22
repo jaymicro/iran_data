@@ -278,3 +278,27 @@ which(ratio >10000)
 kruskal.test(ratio ~ metadata$treatment)
 
 ###Lets run Random forest model with plants as predictors and treatment as the response variables....
+
+library(randomForest)
+
+df_rf<-data.frame(response=metadata$treatment, df_pc)
+
+names(df_rf)
+
+smp_size <- floor(0.75 * nrow(df_rf))
+set.seed(123)
+train_ind <- sample(seq_len(nrow(df_rf)), size = smp_size)
+train <- df_rf[train_ind, ]
+test <- df_rf[-train_ind, ]
+rf_classifier = randomForest(response ~ ., data=train
+                             , ntree=500, mtry=2, importance=TRUE)
+
+rf_classifier
+
+varImpPlot(rf_classifier)
+
+# prediction_for_table <- predict(rf_classifier,test)
+# 
+# table(observed=test[,5],predicted=prediction_for_table)
+# 
+# names(test)
