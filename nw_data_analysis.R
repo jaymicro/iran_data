@@ -259,7 +259,7 @@ beta_div <- metaMDS(dist_bray, k =2, trymax = 999)
 # biomass vs dominance ----------------------------------------------------
 
 mod_PD <- aov(sqrt(div_metric$biomass) ~ div_metric$simpson_index * metadata$treatment +Error(metadata$id_id))
-
+(mod_PD)
 plot(residuals.aovlist(mod_PD))
 shapiro.test(resid(mod_PD))
 hist(div_metric$biomass)
@@ -268,7 +268,7 @@ plot(div_metric$biomass ~ div_metric$simpson_index)
 
 ratio <- div_metric$biomass / div_metric$simpson_index
 
-ggplot(div_metric, aes(y= simpson_index, x = biomass)) +
+ggplot(div_metric, aes(y= ratio, x = treatment)) +
   geom_point() +
   geom_smooth(method = "gam" )
 
@@ -276,6 +276,7 @@ which(ratio >10000)
 
 
 kruskal.test(ratio ~ metadata$treatment)
+boxplot(ratio ~ metadata$treatment)
 
 ###Lets run Random forest model with plants as predictors and treatment as the response variables....
 
@@ -302,3 +303,13 @@ varImpPlot(rf_classifier)
 # table(observed=test[,5],predicted=prediction_for_table)
 # 
 # names(test)
+
+nw_metric <- data.frame(nw_metric = div_metric$simpson_index/div_metric$biomass, 
+                                                 div_metric,
+                                                 treatment = metadata$treatment,
+                                                 id = metadata$id_id) %>% 
+     drop_na()
+mod_PD <- aov(log1p(nw_metric) ~ treatment+ Error(id),data = nw_metric)
+
+### let create the metadata information from aspect, slope, MAP, MAT and then overlay that information on
+### beta diversity
