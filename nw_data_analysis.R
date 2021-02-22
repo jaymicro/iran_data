@@ -13,7 +13,7 @@ df_biomass<- read.csv("biomass_correct.csv",  row.names = 1)
 df_pc <- df_percentcover %>% 
   replace(is.na(.), 0) %>% 
   select(-c(id_id)) %>% 
-  slice(-c(489,505,128, 192, 256, 576, 704,768,832,896,960,1024))
+  slice(-c(252,315,379, 489,505,128, 192, 256, 576,696, 704,768,822, 885, 886, 832,896,960,1024))
 
 
 df_biomass_clean <- df_biomass %>% 
@@ -31,7 +31,7 @@ metadata <- df_percentcover %>%
                                 ifelse(grepl("maz_po", .$id_id), "maz_po",
                                        ifelse(grepl("masouleh", .$id_id), "masouleh",
                                               ifelse(grepl("maz_java", .$id_id), "maz_java","ramian"))))) %>% 
-  slice(-c(489,505,128, 192, 256, 576, 704,768,832,896,960,1024))
+  slice(-c(252,315,379, 489,505,128, 192, 256, 576,696, 704,768,822, 885, 886, 832,896,960,1024))
 
 
 
