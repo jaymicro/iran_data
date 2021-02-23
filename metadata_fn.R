@@ -413,10 +413,24 @@ nw_df <- lapply(df, change_names)
 
 combined_df_fn <- 
   bind_rows(nw_df, .id = "column_label") %>% 
-  select(sort(tidyselect::peek_vars()))%>%
-  select(-column_label) 
+  select(sort(tidyselect::peek_vars()))
+  
+#write.csv(combined_df_fn, file = "functional_group.csv")
+
+levels(fg1$growth_form)
+fg1=read.csv("functional_group_t.csv", header = T)%>%
+  clean_names()%>%
+  mutate(life_span=if_else(growth_form=="Annual Forb"|growth_form=="Annual Grass ","Annual","Perennial"),
+         life_form=case_when(growth_form=="Annual Forb"|growth_form=="Perennial Forb"~"Forb",
+                             growth_form=="Annual Grass "|growth_form=="Perennial Grass"~"Grass",
+                             growth_form=="Bushy Tree"|growth_form=="Shrub"~"Woody"))
+
+
+floristic_list <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site.xlsx",
+                                                      sheet = 4,   
+                                                      colNames = T) %>%
+  janitor::clean_names()%>%
+  select(2:5)%>%
+  mutate(species=str_extract(row.names(.$scientific_name_of_species), "^[a-z]+_[a-z]+"))
 
   
-write.csv(combined_df_fn, file = "functional_group.csv")
-
-
