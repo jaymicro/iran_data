@@ -422,7 +422,9 @@ fg1=read.csv("functional_group_t.csv", header = T)%>%
   mutate(life_span=if_else(growth_form=="Annual Forb"|growth_form=="Annual Grass ","Annual","Perennial"),
          life_form=case_when(growth_form=="Annual Forb"|growth_form=="Perennial Forb"~"Forb",
                              growth_form=="Annual Grass "|growth_form=="Perennial Grass"~"Grass",
-                             growth_form=="Bushy Tree"|growth_form=="Shrub"~"Woody"))
+                             growth_form=="Bushy Tree"|growth_form=="Shrub"~"Woody"))%>%
+  mutate(g=str_extract(species, "^\\w+_"))
+head(fg1)
 
 
 floristic_list <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site.xlsx",
@@ -432,10 +434,15 @@ floristic_list <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh 
   select(2:5)%>%
   mutate(spec=str_extract(scientific_name_of_species, "^\\w+[:space:]+\\w+")) %>% 
   mutate(species_lw = tolower(spec)) 
-
-fl_list<-floristic_list%>% 
-  mutate(species = gsub( " +", "_", floristic_list$species_lw))
   
 
+names(fl_list)
+fl_list<-floristic_list%>% 
+  mutate(species = gsub( " +", "_", floristic_list$species_lw))%>%
+  mutate(g=str_extract(species, "^\\w+_"))%>%
+  select(c(family_name,species,g ))
+  
+head(fl_list)
+meta_fg=left_join(fg1,fl_list,by="g")
 
 
