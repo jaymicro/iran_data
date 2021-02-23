@@ -432,8 +432,7 @@ floristic_list <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh 
   select(2:5)%>%
   mutate(species=str_extract(scientific_name_of_species, "^\\w+[:space:]+\\w+")) %>% 
   mutate(species_lw = tolower(species)) %>% 
-mutate(flor_list = gsub( " +", "_", floristic_list$species_lw))
-  
+mutate(flor_list = gsub( " +", "_", species_lw)) 
 
 
 
