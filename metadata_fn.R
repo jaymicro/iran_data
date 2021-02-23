@@ -417,7 +417,6 @@ combined_df_fn <-
   
 #write.csv(combined_df_fn, file = "functional_group.csv")
 
-levels(fg1$growth_form)
 fg1=read.csv("functional_group_t.csv", header = T)%>%
   clean_names()%>%
   mutate(life_span=if_else(growth_form=="Annual Forb"|growth_form=="Annual Grass ","Annual","Perennial"),
@@ -431,6 +430,6 @@ floristic_list <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh 
                                                       colNames = T) %>%
   janitor::clean_names()%>%
   select(2:5)%>%
-  mutate(species=str_extract(row.names(.$scientific_name_of_species), "^[a-z]+_[a-z]+"))
+  mutate(species=str_extract((.$scientific_name_of_species), "^[a-z]+_[a-z]+"))
 
   
