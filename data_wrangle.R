@@ -38,7 +38,7 @@ df_biomass_masouleh_EA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cel
 df_percent_cover_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_WORK", times = nrow(.)))
+  mutate(id_id = rep("masouleh_EA2", times = nrow(.)))
 
 sp_name <- colnames(df_percent_cover_masouleh_EA2)
 

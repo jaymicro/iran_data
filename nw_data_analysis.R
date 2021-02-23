@@ -7,12 +7,13 @@ library(ape)
 library(dae)
 
 
-df_percentcover<- read.csv("percentcover_correct.csv",  row.names = 1)
+df_percentcover<- read.csv("percentcover_correct.csv",  row.names = 1) %>% 
+  filter(id_id != "masouleh_WORK")
 df_biomass<- read.csv("biomass_correct.csv",  row.names = 1)
 
 df_pc <- df_percentcover %>% 
-  replace(is.na(.), 0) %>% 
-  select(-c(id_id))
+  replace(is.na(.), 0)%>% 
+  select(-c(id_id)) 
 
 
 df_biomass_clean <- df_biomass %>% 
@@ -30,7 +31,7 @@ metadata <- df_percentcover %>%
   mutate(aspect = case_when(id_id == "masouleh_EA1" ~ "NW",
                             id_id == "masouleh_EA2" ~ "N",
                             id_id == "masouleh_GA1" ~ "SE",
-                            id_id == "masouleh_WORK" ~ "NE",
+                            id_id == "masouleh_GA2" ~ "NE",
                             id_id == "ramian_GA1" ~ "NW",
                             id_id == "ramian_GA2" ~ "NW",
                             id_id == "maz_java_EA1" ~ "E",
@@ -46,7 +47,7 @@ metadata <- df_percentcover %>%
   mutate(elevation = case_when(id_id == "masouleh_EA1" ~ "2216",
                                id_id == "masouleh_EA2" ~ "1950",
                                id_id == "masouleh_GA1" ~ "2216",
-                               id_id == "masouleh_WORK" ~ "2188",
+                               id_id == "masouleh_GA2" ~ "2188",
                                id_id == "ramian_GA1" ~ "2020",
                                id_id == "ramian_GA2" ~ "2020",
                                id_id == "maz_java_EA1" ~ "1838",
@@ -62,7 +63,7 @@ metadata <- df_percentcover %>%
   mutate(slope = case_when(id_id == "masouleh_EA1" ~ "60",
                            id_id == "masouleh_EA2" ~ "27",
                            id_id == "masouleh_GA1" ~ "60",
-                           id_id == "masouleh_WORK" ~ "5",
+                           id_id == "masouleh_GA2" ~ "5",
                            id_id == "ramian_GA1" ~ "55.5",
                            id_id == "ramian_GA2" ~ "55.5",
                            id_id == "maz_java_EA1" ~ "10",
