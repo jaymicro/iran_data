@@ -430,9 +430,9 @@ floristic_list <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh 
                                                       colNames = T) %>%
   janitor::clean_names()%>%
   select(2:5)%>%
-  mutate(species=str_extract(scientific_name_of_species, "^\\w+[:space:]+\\w+")) %>% 
-  mutate(species_lw = tolower(species)) %>% 
-mutate(flor_list = gsub( " +", "_", floristic_list$species_lw))
+  mutate(spec=str_extract(scientific_name_of_species, "^\\w+[:space:]+\\w+")) %>% 
+  mutate(species_lw = tolower(spec)) %>% 
+  mutate(species = gsub( " +", "_", floristic_list$species_lw))
   
 
 
