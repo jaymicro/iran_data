@@ -454,3 +454,7 @@ meta_fg=left_join(fg1,fl_list,by="g")%>%
 
 table(is.na(meta_fg$family_name))
 
+
+library("xlsx")
+
+xlsx::write.xlsx(meta_fg, file="meta_fg.xlsx")
