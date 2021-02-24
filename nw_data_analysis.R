@@ -107,7 +107,7 @@ metadata <- df_percentcover %>%
                                id_id == "kho_GA2" ~ "75.65",
                                id_id == "kho_GA3" ~ "113.5",
                                id_id == "kho_GA4" ~ "225.9")) %>% 
-  mutate(long = case_when(id_id == "masouleh_EA1" ~ "37.176945",
+  mutate(lat = case_when(id_id == "masouleh_EA1" ~ "37.176945",
                            id_id == "masouleh_EA2" ~ "37.174167",
                            id_id == "masouleh_GA1" ~ "37.169722",
                            id_id == "masouleh_GA2" ~ "37.169722",
