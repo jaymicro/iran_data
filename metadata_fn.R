@@ -24,8 +24,7 @@ plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name) %>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name) 
 
 
 # Gillian Masouleh EA2 ----------------------------------------------------
@@ -48,8 +47,7 @@ plant_metadata_gil_EA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 
@@ -59,9 +57,7 @@ plant_metadata_gil_EA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
 df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))%>% 
-  slice(1)
-
+  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
 
 
 sp_name <- colnames(df_percent_cover_masouleh_GA1)
@@ -76,8 +72,7 @@ plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 # Gillian Masouleh GA2 ----------------------------------------------------
 
@@ -99,8 +94,7 @@ plant_metadata_gil_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 
@@ -128,8 +122,7 @@ plant_metadata_ramian_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ra
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Ramina GA2 --------------------------------------------------------------
@@ -153,8 +146,7 @@ plant_metadata_ramian_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ra
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 ##########################################################################################################
 ##########################################################################################################
@@ -179,9 +171,7 @@ plant_metadata_maz_java_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandara
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
-
+  rename_at(colnames(.), ~ sp_name)
 
 # Maz java GA1 ---------------------------------------------------------------
 
@@ -202,8 +192,7 @@ plant_metadata_maz_java_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandara
   select(1:(length(sp_name)+1)) %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Maz java GA2 ------------------------------------------------------------
@@ -225,8 +214,7 @@ plant_metadata_maz_java_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandara
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 # Maz Po   GA1 -----------------------------------------------------------------
 
@@ -247,8 +235,7 @@ plant_metadata_maz_po_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Maz Po GA2 --------------------------------------------------------------
@@ -270,8 +257,7 @@ plant_metadata_maz_po_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Maz Po EA1 ------------------------------------------------------------------
@@ -293,8 +279,7 @@ plant_metadata_maz_po_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-
   janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 
@@ -316,8 +301,7 @@ plant_metadata_kho_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
   select(1:(length(sp_name)+1)) %>% 
   select(-c(X1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Kho GA2 -----------------------------------------------------------------
@@ -338,8 +322,7 @@ plant_metadata_kho_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
   select(1:(length(sp_name)+1)) %>% 
   select(-c(X1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Kho GA3 -----------------------------------------------------------------
@@ -360,8 +343,7 @@ plant_metadata_kho_GA3 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
   select(1:(length(sp_name)+1)) %>% 
   select(-c(X1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 
 # Kho GA4 -----------------------------------------------------------------
@@ -383,8 +365,7 @@ plant_metadata_kho_GA4 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
   select(1:(length(sp_name)+1)) %>% 
   select(-c(X1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)%>% 
-  slice(1)
+  rename_at(colnames(.), ~ sp_name)
 
 change_names <- function(x){
   nw_name <- str_extract(colnames(x), "^[a-z]+_[a-z]+")
