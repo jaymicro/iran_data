@@ -440,9 +440,17 @@ names(fl_list)
 fl_list<-floristic_list%>% 
   mutate(species = gsub( " +", "_", floristic_list$species_lw))%>%
   mutate(g=str_extract(species, "^\\w+_"))%>%
-  select(c(family_name,species,g ))
+  select(c(family_name,g ))
   
 head(fl_list)
-meta_fg=left_join(fg1,fl_list,by="g")
 
+meta_fg=left_join(fg1,fl_list,by="g")%>%
+  mutate(legume=if_else(family_name=="Papilionaceae"|
+                            family_name=="Caesalpiniaceae"|
+                          family_name=="Mimosaceae"|
+                          family_name=="Fabaceae"|
+                          family_name=="Leguminosae","Y","N"))%>%
+  distinct(., species, .keep_all=T)
+
+table(is.na(meta_fg$family_name))
 
