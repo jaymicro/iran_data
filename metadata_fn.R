@@ -6,16 +6,17 @@ library(readxl)
 # Gillian Masouleh GA1 ----------------------------------------------------
 
 
-df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 1, cell_rows(10:74)) %>% 
+df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh_update.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class)) %>% 
-  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA1", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_masouleh_GA1)
 
 
-plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
+plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh_update.xlsx",
                                             sheet = 1,  fillMergedCells = TRUE, 
                                             colNames = F) %>% 
   slice(75:79) %>%
@@ -31,14 +32,15 @@ plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
 
 
 
-df_percent_cover_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_masouleh_EA2 <- read_xlsx("Iran-Gillan-Masouleh_update.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_WORK", times = nrow(.)))
+  mutate(id_id = rep("masouleh_WORK", times = nrow(.))) %>% 
+  slice(1)
 
 sp_name <- colnames(df_percent_cover_masouleh_EA2)
 
-plant_metadata_gil_EA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
+plant_metadata_gil_EA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh_update.xlsx",
                                              sheet = 2,  fillMergedCells = TRUE, 
                                              colNames = F) %>% 
   slice(75:79) %>%
@@ -54,16 +56,16 @@ plant_metadata_gil_EA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
 # Gillian Masouleh GA1 ----------------------------------------------------
 
 #Importing data one sheet at a time. Each df is one unique sheet in the excel
-df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 3, cell_rows(10:74)) %>% 
+df_percent_cover_masouleh_GA1 <- read_xlsx("Iran-Gillan-Masouleh_update.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
-  select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_GA1", times = nrow(.)))
-
+  select(-c(x1,above_ground_live_dry_biomass_g:range_class))%>% 
+  mutate(id_id = rep("masouleh_GA1", times = nrow(.))) %>% 
+  slice(1)
 
 sp_name <- colnames(df_percent_cover_masouleh_GA1)
 
 
-plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
+plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh_update.xlsx",
                                              sheet = 3,  fillMergedCells = TRUE, 
                                              colNames = F) %>% 
   slice(75:79) %>%
@@ -76,16 +78,17 @@ plant_metadata_gil_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
 
 # Gillian Masouleh GA2 ----------------------------------------------------
 
-df_percent_cover_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh.xlsx", sheet = 4, cell_rows(10:74)) %>% 
+df_percent_cover_masouleh_GA2 <- read_xlsx("Iran-Gillan-Masouleh_update.xlsx", sheet = 4, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:range_class))%>% 
-  mutate(id_id = rep("masouleh_GA2", times = nrow(.)))
+  mutate(id_id = rep("masouleh_GA2", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_masouleh_GA2)
 
 
-plant_metadata_gil_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh.xlsx",
+plant_metadata_gil_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masouleh_update.xlsx",
                                                  sheet = 4,  fillMergedCells = TRUE, 
                                                  colNames = F) %>% 
   slice(75:79) %>%
@@ -105,15 +108,15 @@ plant_metadata_gil_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Gillan-Masoule
 
 # Ramian GA1------------------------------------------------------------------
 
-df_percent_cover_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 1, cell_rows(10:74)) %>% 
+df_percent_cover_ramian_GA1 <- read_xlsx("Iran-Golestan-Ramian_update.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
-  select(-c(species_names,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("ramian_GA1", times = nrow(.)))
-
+  select(-c(x1,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
+  mutate(id_id = rep("ramian_GA1", times = nrow(.))) %>% 
+  slice(1)
 
 sp_name <- colnames(df_percent_cover_ramian_GA1)
 
-plant_metadata_ramian_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ramian.xlsx",
+plant_metadata_ramian_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ramian_update.xlsx",
                                                  sheet = 1,  fillMergedCells = TRUE, 
                                                  colNames = F) %>% 
   slice(75:79) %>%
@@ -129,15 +132,16 @@ plant_metadata_ramian_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ra
 
 
 
-df_percent_cover_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_ramian_GA2 <- read_xlsx("Iran-Golestan-Ramian_update.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(species_names,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("ramian_GA2", times = nrow(.)))
+  mutate(id_id = rep("ramian_GA2", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_ramian_GA2)
 
-plant_metadata_ramian_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ramian.xlsx",
+plant_metadata_ramian_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ramian_update.xlsx",
                                                     sheet = 2,  fillMergedCells = TRUE, 
                                                     colNames = F) %>% 
   slice(75:79) %>%
@@ -154,15 +158,16 @@ plant_metadata_ramian_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Golestan-Ra
 
 # Maz Jav EA1 -------------------------------------------------------------
 
-df_percent_cover_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 1, cell_rows(10:74)) %>% 
+df_percent_cover_maz_java_EA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site_update.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("maz_java_EA1", times = nrow(.)))
+  mutate(id_id = rep("maz_java_EA1", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_maz_java_EA1)
 
-plant_metadata_maz_java_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site.xlsx",
+plant_metadata_maz_java_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site_update.xlsx",
                                                     sheet = 1,  fillMergedCells = TRUE, 
                                                     colNames = F) %>% 
   slice(75:79) %>%
@@ -175,15 +180,16 @@ plant_metadata_maz_java_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandara
 
 # Maz java GA1 ---------------------------------------------------------------
 
-df_percent_cover_maz_java_GA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_maz_java_GA1 <- read_xlsx("Iran-Mazandaran-Javaherdeh site_update.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("maz_java_GA1", times = nrow(.)))
+  mutate(id_id = rep("maz_java_GA1", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_maz_java_GA1)
 
-plant_metadata_maz_java_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site.xlsx",
+plant_metadata_maz_java_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site_update.xlsx",
                                                       sheet = 2,  fillMergedCells = TRUE, 
                                                       colNames = F) %>% 
   slice(75:77) %>%
@@ -197,15 +203,16 @@ plant_metadata_maz_java_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandara
 
 # Maz java GA2 ------------------------------------------------------------
 
-df_percent_cover_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site.xlsx", sheet = 3, cell_rows(10:74)) %>% 
+df_percent_cover_maz_java_GA2 <- read_xlsx("Iran-Mazandaran-Javaherdeh site_update.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("maz_java_GA2", times = nrow(.)))
+  mutate(id_id = rep("maz_java_GA2", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_maz_java_GA2)
 
-plant_metadata_maz_java_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site.xlsx",
+plant_metadata_maz_java_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Javaherdeh site_update.xlsx",
                                                       sheet = 3,  fillMergedCells = TRUE, 
                                                       colNames = F) %>% 
   slice(75:79) %>%
@@ -218,37 +225,40 @@ plant_metadata_maz_java_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandara
 
 # Maz Po   GA1 -----------------------------------------------------------------
 
-df_percent_cover_maz_po_GA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 1, cell_rows(10:74)) %>% 
+df_percent_cover_maz_po_GA1 <- read_xlsx("Iran-Mazandaran-Polour_update.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
-  select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("maz_po_GA1", times = nrow(.)))
+  select(-c(x1,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
+  mutate(id_id = rep("maz_po_GA1", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_maz_po_GA1)
 
-plant_metadata_maz_po_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Polour.xlsx",
+plant_metadata_maz_po_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Polour_update.xlsx",
                                                       sheet = 1,  fillMergedCells = TRUE, 
                                                       colNames = F) %>% 
   slice(75:79) %>%
   #janitor::row_to_names(1) %>% 
   janitor::clean_names() %>% 
-  janitor::remove_empty("cols") %>% 
   select(-c(x1)) %>% 
   select(1:length(sp_name)) %>% 
-  rename_at(colnames(.), ~ sp_name)
+  rename_at(colnames(.), ~ sp_name) %>% 
+  janitor::remove_empty("cols")
+  
 
 
 # Maz Po GA2 --------------------------------------------------------------
 
-df_percent_cover_maz_po_GA2 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_maz_po_GA2 <- read_xlsx("Iran-Mazandaran-Polour_update.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
-  select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("maz_po_GA2", times = nrow(.)))
+  select(-c(x1,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
+  mutate(id_id = rep("maz_po_GA2", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_maz_po_GA2)
 
-plant_metadata_maz_po_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Polour.xlsx",
+plant_metadata_maz_po_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Polour_update.xlsx",
                                                     sheet = 2,  fillMergedCells = TRUE, 
                                                     colNames = F) %>% 
   slice(75:79) %>%
@@ -262,15 +272,16 @@ plant_metadata_maz_po_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-
 
 # Maz Po EA1 ------------------------------------------------------------------
 
-df_percent_cover_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour.xlsx", sheet = 3, cell_rows(10:74)) %>% 
+df_percent_cover_maz_po_EA1 <- read_xlsx("Iran-Mazandaran-Polour_update.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
-  select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
-  mutate(id_id = rep("maz_po_EA1", times = nrow(.)))
+  select(-c(x1,above_ground_live_dry_biomass_g:litter_dry_biomass_g))%>% 
+  mutate(id_id = rep("maz_po_EA1", times = nrow(.)))%>%
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_maz_po_EA1)
 
-plant_metadata_maz_po_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Polour.xlsx",
+plant_metadata_maz_po_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-Polour_update.xlsx",
                                                     sheet = 3,  fillMergedCells = TRUE, 
                                                     colNames = F) %>% 
   slice(75:79) %>%
@@ -285,15 +296,16 @@ plant_metadata_maz_po_EA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-Mazandaran-
 
 # Maz GA1  -----------------------------------------------------------------
 
-df_percent_cover_kho_GA1 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 1, cell_rows(10:74)) %>% 
+df_percent_cover_kho_GA1 <- read_xlsx("Iran-North Khorasan_update.xlsx", sheet = 1, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g_m2:litter_dry_biomass_g_m2))%>% 
-  mutate(id_id = rep("kho_GA1", times = nrow(.)))
+  mutate(id_id = rep("kho_GA1", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_kho_GA1)
 
-plant_metadata_kho_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan.xlsx",
+plant_metadata_kho_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan_update.xlsx",
                                                     sheet = 1,  fillMergedCells = TRUE, 
                                                     colNames = F) %>% 
   slice(75:79) %>%
@@ -306,15 +318,16 @@ plant_metadata_kho_GA1 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
 
 # Kho GA2 -----------------------------------------------------------------
 
-df_percent_cover_kho_GA2 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 2, cell_rows(10:74)) %>% 
+df_percent_cover_kho_GA2 <- read_xlsx("Iran-North Khorasan_update.xlsx", sheet = 2, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g_m2))%>% 
-  mutate(id_id = rep("kho_GA2", times = nrow(.)))
+  mutate(id_id = rep("kho_GA2", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_kho_GA2)
 
-plant_metadata_kho_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan.xlsx",
+plant_metadata_kho_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan_update.xlsx",
                                                  sheet = 2,  fillMergedCells = TRUE, 
                                                  colNames = F) %>% 
   slice(75:79) %>%
@@ -327,15 +340,16 @@ plant_metadata_kho_GA2 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
 
 # Kho GA3 -----------------------------------------------------------------
 
-df_percent_cover_kho_GA3 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 3, cell_rows(10:74)) %>% 
+df_percent_cover_kho_GA3 <- read_xlsx("Iran-North Khorasan_update.xlsx", sheet = 3, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g_m2))%>% 
-  mutate(id_id = rep("kho_GA3", times = nrow(.)))
+  mutate(id_id = rep("kho_GA3", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_kho_GA3)
 
-plant_metadata_kho_GA3 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan.xlsx",
+plant_metadata_kho_GA3 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan_update.xlsx",
                                                  sheet = 3,  fillMergedCells = TRUE, 
                                                  colNames = F) %>% 
   slice(75:79) %>%
@@ -348,16 +362,17 @@ plant_metadata_kho_GA3 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan
 
 # Kho GA4 -----------------------------------------------------------------
 
-df_percent_cover_kho_GA4 <- read_xlsx("Iran-North Khorasan.xlsx", sheet = 4, cell_rows(10:74)) %>% 
+df_percent_cover_kho_GA4 <- read_xlsx("Iran-North Khorasan_update.xlsx", sheet = 4, cell_rows(10:74)) %>% 
   janitor::clean_names() %>%  
   select(-c(plot_indicator,above_ground_live_dry_biomass_g:litter_dry_biomass_g_m2))%>% 
-  mutate(id_id = rep("kho_GA3", times = nrow(.)))
+  mutate(id_id = rep("kho_GA3", times = nrow(.))) %>% 
+  slice(1)
 
 
 sp_name <- colnames(df_percent_cover_kho_GA4)
 
 
-plant_metadata_kho_GA4 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan.xlsx",
+plant_metadata_kho_GA4 <- openxlsx::readWorkbook(xlsxFile = "Iran-North Khorasan_update.xlsx",
                                                  sheet = 4,  fillMergedCells = TRUE, 
                                                  colNames = F) %>% 
   slice(75:79) %>%
@@ -394,9 +409,12 @@ nw_df <- lapply(df, change_names)
 
 combined_df_fn <- 
   bind_rows(nw_df, .id = "column_label") %>% 
-  select(sort(tidyselect::peek_vars()))
+  select(sort(tidyselect::peek_vars())) %>% 
+  t()
   
-#write.csv(combined_df_fn, file = "functional_group.csv")
+library("xlsx")
+
+xlsx::write.xlsx(combined_df_fn, file="combined_df_fn.xlsx")
 
 fg1=read.csv("functional_group_t.csv", header = T)%>%
   clean_names()%>%
@@ -436,6 +454,4 @@ meta_fg=left_join(fg1,fl_list,by="g")%>%
 table(is.na(meta_fg$family_name))
 
 
-library("xlsx")
 
-xlsx::write.xlsx(meta_fg, file="meta_fg.xlsx")
