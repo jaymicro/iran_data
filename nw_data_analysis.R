@@ -150,16 +150,11 @@ df_pc <- df_pc %>%
 df_biomass_clean <- df_biomass_clean %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
+metadata <- metadata %>% 
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
+
 which(rowSums(df_biomass_clean) == 0)
 which(rowSums(df_pc) == 0)
-metadata <- df_percentcover %>% 
-  select(id_id) %>% 
-  mutate(         treatment = ifelse(grepl("GA", .$id_id), "grazing", "exclosure"),
-                  site = ifelse(grepl("kho", .$id_id), "kho",
-                                ifelse(grepl("maz_po", .$id_id), "maz_po",
-                                       ifelse(grepl("masouleh", .$id_id), "masouleh",
-                                              ifelse(grepl("maz_java", .$id_id), "maz_java","ramian"))))) %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
 ###########################################################################################
 ############################### Alpha diversity ###########################################
