@@ -7,8 +7,7 @@ library(ape)
 library(dae)
 
 
-df_percentcover<- read.csv("percentcover_correct.csv",  row.names = 1) %>% 
-  filter(id_id != "masouleh_WORK")
+df_percentcover<- read.csv("percentcover_correct.csv",  row.names = 1) 
 df_biomass<- read.csv("biomass_correct.csv",  row.names = 1)
 
 df_pc <- df_percentcover %>% 
