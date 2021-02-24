@@ -74,17 +74,81 @@ metadata <- df_percentcover %>%
                            id_id == "kho_GA1" ~ "10",
                            id_id == "kho_GA2" ~ "3",
                            id_id == "kho_GA3" ~ "17",
-                           id_id == "kho_GA4" ~ "28"))
+                           id_id == "kho_GA4" ~ "28")) %>% 
+  mutate(avg_temp = case_when(id_id == "masouleh_EA1" ~ "23.7",
+                            id_id == "masouleh_EA2" ~ "23.7",
+                            id_id == "masouleh_GA1" ~ "16.6",
+                            id_id == "masouleh_GA2" ~ "16.6",
+                            id_id == "ramian_GA1" ~ "16.5",
+                            id_id == "ramian_GA2" ~ "16.5",
+                            id_id == "maz_java_EA1" ~ "13",
+                            id_id == "maz_java_GA1" ~ "11",
+                            id_id == "maz_java_GA2" ~ "11",
+                            id_id == "maz_po_GA1" ~ "9",
+                            id_id == "maz_po_GA2" ~ "9",
+                            id_id == "maz_po_EA1" ~ "9.07",
+                            id_id == "kho_GA1" ~ "18.5",
+                            id_id == "kho_GA2" ~ "22.41",
+                            id_id == "kho_GA3" ~ "16.54",
+                            id_id == "kho_GA4" ~ "12")) %>% 
+  mutate(avg_ppt = case_when(id_id == "masouleh_EA1" ~ "601",
+                               id_id == "masouleh_EA2" ~ "601",
+                               id_id == "masouleh_GA1" ~ "502",
+                               id_id == "masouleh_GA2" ~ "502",
+                               id_id == "ramian_GA1" ~ "450",
+                               id_id == "ramian_GA2" ~ "450",
+                               id_id == "maz_java_EA1" ~ "675",
+                               id_id == "maz_java_GA1" ~ "670",
+                               id_id == "maz_java_GA2" ~ "670",
+                               id_id == "maz_po_GA1" ~ "535",
+                               id_id == "maz_po_GA2" ~ "535",
+                               id_id == "maz_po_EA1" ~ "535",
+                               id_id == "kho_GA1" ~ "247.11",
+                               id_id == "kho_GA2" ~ "75.65",
+                               id_id == "kho_GA3" ~ "113.5",
+                               id_id == "kho_GA4" ~ "225.9")) %>% 
+  mutate(long = case_when(id_id == "masouleh_EA1" ~ "37.176945",
+                           id_id == "masouleh_EA2" ~ "37.174167",
+                           id_id == "masouleh_GA1" ~ "37.169722",
+                           id_id == "masouleh_GA2" ~ "37.169722",
+                           id_id == "ramian_GA1" ~ "",
+                           id_id == "ramian_GA2" ~ "",
+                           id_id == "maz_java_EA1" ~ "",
+                           id_id == "maz_java_GA1" ~ "",
+                           id_id == "maz_java_GA2" ~ "",
+                           id_id == "maz_po_GA1" ~ "",
+                           id_id == "maz_po_GA2" ~ "",
+                           id_id == "maz_po_EA1" ~ "",
+                           id_id == "kho_GA1" ~ "",
+                           id_id == "kho_GA2" ~ "",
+                           id_id == "kho_GA3" ~ "",
+                           id_id == "kho_GA4" ~ "")) %>% 
+  mutate(long = case_when(id_id == "masouleh_EA1" ~ "48.950833",
+                          id_id == "masouleh_EA2" ~ "48.954722",
+                          id_id == "masouleh_GA1" ~ " 48.914722 ",
+                          id_id == "masouleh_GA2" ~ "48.917778",
+                          id_id == "ramian_GA1" ~ "",
+                          id_id == "ramian_GA2" ~ "",
+                          id_id == "maz_java_EA1" ~ "",
+                          id_id == "maz_java_GA1" ~ "",
+                          id_id == "maz_java_GA2" ~ "",
+                          id_id == "maz_po_GA1" ~ "",
+                          id_id == "maz_po_GA2" ~ "",
+                          id_id == "maz_po_EA1" ~ "",
+                          id_id == "kho_GA1" ~ "",
+                          id_id == "kho_GA2" ~ "",
+                          id_id == "kho_GA3" ~ "",
+                          id_id == "kho_GA4" ~ ""))  
            
 
 which(rowSums(df_biomass_clean) == 0)
 which(rowSums(df_pc) == 0)
 
 df_pc <- df_pc %>% 
-  slice(-c(128,  192, 254, 256, 318, 382, 489, 505, 576, 702, 704,  768, 830, 832, 894, 895, 896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
 df_biomass_clean <- df_biomass_clean %>% 
-  slice(-c(128,  192, 254, 256, 318, 382, 489, 505, 576, 702, 704,  768, 830, 832, 894, 895, 896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
 which(rowSums(df_biomass_clean) == 0)
 which(rowSums(df_pc) == 0)
@@ -95,7 +159,7 @@ metadata <- df_percentcover %>%
                                 ifelse(grepl("maz_po", .$id_id), "maz_po",
                                        ifelse(grepl("masouleh", .$id_id), "masouleh",
                                               ifelse(grepl("maz_java", .$id_id), "maz_java","ramian"))))) %>% 
-  slice(-c(128,  192, 254, 256, 318, 382, 489, 505, 576, 702, 704,  768, 830, 832, 894, 895, 896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
 ###########################################################################################
 ############################### Alpha diversity ###########################################
