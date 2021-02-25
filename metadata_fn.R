@@ -1,8 +1,10 @@
 library(tidyverse)
 library(janitor)
 library(readxl)
+library("xlsx")
 
 
+#note - this code is with updated excel files and will not create functional_group.csv
 # Gillian Masouleh GA1 ----------------------------------------------------
 
 
@@ -388,33 +390,47 @@ change_names <- function(x){
   return(as.data.frame(x))
 }
 
-df <- list(plant_metadata_gil_EA2,
-           plant_metadata_gil_GA1,
-           plant_metadata_gil_GA2,
-           plant_metadata_kho_GA1,
-           plant_metadata_kho_GA2,
-           plant_metadata_kho_GA3,
-           plant_metadata_kho_GA4,
-           plant_metadata_maz_java_EA1,
-           plant_metadata_maz_java_GA1,
-           plant_metadata_maz_java_GA2,
-           plant_metadata_maz_po_EA1,
-           plant_metadata_maz_po_GA1,
-           plant_metadata_maz_po_GA2,
-           plant_metadata_ramian_GA1,
-           plant_metadata_ramian_GA2)
+dim(plant_metadata_gil_EA2)
+
+
+df <- list(plant_metadata_gil_EA2[-1,],
+           plant_metadata_gil_GA1[-1,],
+           plant_metadata_gil_GA2[-1,],
+           plant_metadata_kho_GA1[-1,],
+           plant_metadata_kho_GA2[-1,],
+           plant_metadata_kho_GA3[-1,],
+           plant_metadata_kho_GA4[-1,],
+           plant_metadata_maz_java_EA1[-1,],
+           plant_metadata_maz_java_GA1[-1,],
+           plant_metadata_maz_java_GA2[-1,],
+           plant_metadata_maz_po_EA1[-1,],
+           plant_metadata_maz_po_GA1[-1,],
+           plant_metadata_maz_po_GA2[-1,],
+           plant_metadata_ramian_GA1[-1,],
+           plant_metadata_ramian_GA2[-1,])
   
 
 nw_df <- lapply(df, change_names)  
 
 combined_df_fn <- 
   bind_rows(nw_df, .id = "column_label") %>% 
-  select(sort(tidyselect::peek_vars())) %>% 
-  t()
-  
-library("xlsx")
+  select(sort(tidyselect::peek_vars()))%>% 
+  replace(is.na(.), 0) %>% 
+  apply(., 2, sort, decreasing=T) %>%
+  unique(.)
+
+
+
+
 
 xlsx::write.xlsx(combined_df_fn, file="combined_df_fn.xlsx")
+
+
+
+
+
+
+
 
 fg1=read.csv("functional_group_t.csv", header = T)%>%
   clean_names()%>%
