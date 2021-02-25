@@ -3,6 +3,25 @@ library(janitor)
 library(readxl)
 library("xlsx")
 
+fg_vars <- read_xlsx("combined_df_fn_remove dups.xlsx", sheet = 1) %>% 
+  janitor::clean_names() %>%
+  t()%>%
+  as.data.frame()%>%
+  rownames_to_column(.) %>% 
+  setNames(., c("species","class","bt","reproduction","ps"))
+
+
+meta_fg<-read_xlsx("meta_fg.xlsx", sheet = 1) %>% 
+  janitor::clean_names() %>%
+  select(-c(x1))
+
+names(meta_fg)
+
+meta_fg<-left_join(meta_fg,fg_vars, by="species" )
+
+write.xlsx(meta_fg, file="meta_fg.xlsx")
+
+#below is how I got the files above
 
 #note - this code is with updated excel files and will not create functional_group.csv
 # Gillian Masouleh GA1 ----------------------------------------------------
