@@ -4,6 +4,7 @@ library(ape)
 library(lme4)
 library(lmerTest)
 library(ape)
+library(nlme)
 #library(dae)
 
 df_biomass_clean <- read.csv("biomass_correct.csv",  row.names = 1)
@@ -207,9 +208,18 @@ anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
 
-
-
+dfdivmeta <- cbind(div_metric, metadata, df_rangescore)
 anova(mod1, mod2, mod3)
+plot(ACF(mod1))
+
+cmod <- lme(exp(Shannon_index) ~ treatment, random = ~ 1|site, dfdivmeta, correlation=corAR1(form=~cYear|Site))
+anova(cmod)
+plot(ACF(cmod))
+
+dfdivmeta %>%
+  mutate(grid1 = str_extract(plot_indicator, pattern = "^[A-Z]"),
+         grid2 = str_extract(plot_indicator, pattern = "[:digit:]"))
+
 #########################################################################################################
 ########                        Simpson index
 ##########################################################################################
