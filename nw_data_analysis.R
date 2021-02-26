@@ -7,8 +7,8 @@ library(ape)
 library(dae)
 
 
-df_percentcover<- read.csv("percentcover_correct.csv",  row.names = 1) 
-df_biomass<- read.csv("biomass_correct.csv",  row.names = 1)
+df_percentcover<- read.csv("combined_df_percent_cover.csv",  row.names = 1) 
+df_biomass<- read.csv("combined_df_biomass.csv",  row.names = 1)
 
 df_pc <- df_percentcover %>% 
   replace(is.na(.), 0)%>% 
