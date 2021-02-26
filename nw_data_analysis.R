@@ -4,23 +4,34 @@ library(ape)
 library(lme4)
 library(lmerTest)
 library(ape)
-library(dae)
+#library(dae)
 
+df_biomass_clean <- read.csv("biomass_correct.csv",  row.names = 1)
+df_pc<- read.csv("percentcover_correct.csv",  row.names = 1) 
+df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") 
+# df_pc <- df_percentcover %>% 
+#   replace(is.na(.), 0) 
+# 
+# 
+# df_biomass_clean <- df_biomass %>% 
+#   replace(is.na(.), 0)
+# 
+# df_pc <- df_pc %>% mutate(bs = boissiera_squarrosa + bosiera_squarrosa, cd = cardaria_draba +cardariadraba_l, 
+#                  dg = dactylis_glomerata + dactylis_glomerata, gv  = galium_verum + galium_verum,
+#                  lp = lolium_perrenne+ lolium_perenne,tm = tragopogon_monanus +tragopogon_montanus)%>% 
+#   select(-c(boissiera_squarrosa,bosiera_squarrosa, cardaria_draba, cardariadraba_l, dactylis_glomerata, dactylis_glomerata,
+#             galium_verum, galium_verum, lolium_perrenne, lolium_perenne,tragopogon_monanus, tragopogon_montanus))
+# 
+# df_biomass_clean <- df_biomass_clean %>% mutate(bs = boissiera_squarrosa + bosiera_squarrosa, cd = cardaria_draba +cardariadraba_l, 
+#                           dg = dactylis_glomerata + dactylis_glomerata, gv  = galium_verum + galium_verum,
+#                           lp = lolium_perrenne+ lolium_perenne,tm = tragopogon_monanus +tragopogon_montanus)%>% 
+#   select(-c(boissiera_squarrosa,bosiera_squarrosa, cardaria_draba, cardariadraba_l, dactylis_glomerata, dactylis_glomerata,
+#             galium_verum, galium_verum, lolium_perrenne, lolium_perenne,tragopogon_monanus, tragopogon_montanus))
+# 
+# write.csv(df_pc, "percentcover_correct.csv")
+# write.csv(df_biomass_clean, "biomass_correct.csv")
 
-df_percentcover<- read.csv("combined_df_percent_cover.csv",  row.names = 1) 
-df_biomass<- read.csv("combined_df_biomass.csv",  row.names = 1)
-
-df_pc <- df_percentcover %>% 
-  replace(is.na(.), 0)%>% 
-  select(-c(id_id)) 
-
-
-df_biomass_clean <- df_biomass %>% 
-  replace(is.na(.), 0) %>% 
-  select(-c(id_id))
-
-
-metadata <- df_percentcover %>% 
+metadata <- df_pc %>% 
   select(id_id) %>% 
   mutate(         treatment = ifelse(grepl("GA", .$id_id), "grazing", "exclosure"),
                   site = ifelse(grepl("kho", .$id_id), "kho",
@@ -140,22 +151,26 @@ metadata <- df_percentcover %>%
                           id_id == "kho_GA3" ~ "58.0815",
                           id_id == "kho_GA4" ~ "57.0775"))  
            
-
-which(rowSums(df_biomass_clean) == 0)
-which(rowSums(df_pc) == 0)
+names(df_biomass_clean)
+which(rowSums(df_biomass_clean[, -109]) == 0)
+which(rowSums(df_pc[, -109]) == 0)
 
 df_pc <- df_pc %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>% select(-id_id)
 
 df_biomass_clean <- df_biomass_clean %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>% select(-id_id)
 
 metadata <- metadata %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
-which(rowSums(df_biomass_clean) == 0)
-which(rowSums(df_pc) == 0)
+df_rangescore <- df_rangescore %>% 
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
+which(rowSums(df_biomass_clean[, -109]) == 0)
+which(rowSums(df_pc[, -109]) == 0)
+
+which(is.numeric(df_pc))
 ###########################################################################################
 ############################### Alpha diversity ###########################################
 ###########################################################################################
@@ -172,7 +187,7 @@ kruskal.test(div_metric$Shannon_index ~ metadata$treatment)
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
 kruskal.test(div_metric$evenness ~ metadata$treatment)
 
-mod1 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
+mod1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
 anova(mod1)
 plot(resid(mod1))
 shapiro.test(resid(mod1))
@@ -180,16 +195,21 @@ qqnorm(resid(mod1))
 qqline(resid(mod1))
 
 
-mod2 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id))
+mod2 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id))
 anova(mod2)
 plot(resid(mod2))
 shapiro.test(resid(mod2))
+qqnorm(resid(mod2))
+qqline(resid(mod2))
 
-mod3 <- lmer((div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
+mod3 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id/df_rangescore$plot_indicator))
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
 
+
+
+anova(mod1, mod2, mod3)
 #########################################################################################################
 ########                        Simpson index
 ##########################################################################################
