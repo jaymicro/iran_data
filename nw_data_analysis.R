@@ -214,54 +214,51 @@ shapiro.test(resid(mod2))
 qqnorm(resid(mod2))
 qqline(resid(mod2))
 
-mod3 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id/df_rangescore$plot_indicator))
+mod3 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site)+(1|metadata$id_id))
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
 
+anova(mod2,mod3)
+
+#mod 2 is the best model, mod 3 has lower AIC but does not pass normality assumption
+
+
 dfdivmeta <- cbind(div_metric, metadata, df_rangescore)
-anova(mod1, mod2, mod3)
-plot(ACF(mod1))
+
 
 dfdivmeta$col <- as.numeric(dfdivmeta$col)
 dfdivmeta$row <- as.numeric(dfdivmeta$row)
 
 
 
-cmod <- gls(simpson_index ~ treatment, method = "ML", dfdivmeta)
-summary(cmod)
-plot(cmod)
-shapiro.test(residuals (cmod))
-
-cmod1 <- gls(simpson_index ~ treatment, method = "ML", 
-            correlation = corExp(form = ~col + row|id_id,
-                                 nugget = TRUE), dfdivmeta)
-summary(cmod1)
-plot(cmod1)
-shapiro.test(residuals (cmod1))
-
-cmod1 <- lmer(Shannon_index ~ treatment + (1|site), REML = FALSE, 
-            dfdivmeta)
-
-summary(cmod1)
-
-car::Anova(cmod, cmod1)
-plot(ACF(cmod))
-plot(resid(cmod))
-qqnorm(resid(cmod))
-qqline(resid(cmod))
-
-as.numeric(df_rangescore$col)
-
-lme(fixed = sqsp ~ Soil.Carbon * Soil.Nitrogen,
-            data = nutdata, random = ~ 1 | grid, method = "ML",
-            correlation = corExp(form = ~rown + coln,
-                                 nugget = TRUE))
 
 #########################################################################################################
 ########                        Simpson index
 ##########################################################################################
-mod1 <- lmer((div_metric$simpson_index) ~ metadata$treatment + (1|metadata$site))
+
+#obtain lambda
+
+EnvStats::boxcox(div_metric$simpson_index+.1)
+
+plot(fitted(rich_mod), resid(rich_mod), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Fitted", ylab = "Residuals")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+
+shapiro.test(resid(rich_mod))
+
+
+#different method
+library("forecast")
+lda <- BoxCox.lambda(div_metric$simpson_index, method=c("guerrero"))
+
+trans.rain <- BoxCox(div_metric$simpson_index,lda)
+hist(trans.rain)
+
+
+#lmer models with exp transformation, not normal
+mod1 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$site))
+
 anova(mod1)
 plot(resid(mod1))
 shapiro.test(resid(mod1))
@@ -269,12 +266,12 @@ qqnorm(resid(mod1))
 qqline(resid(mod1))
 
 
-mod2 <- lmer(log1p(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id))
+mod2 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id))
 anova(mod2)
 plot(resid(mod2))
 shapiro.test(resid(mod2))
 
-mod3 <- lmer(log1p(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
+mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
