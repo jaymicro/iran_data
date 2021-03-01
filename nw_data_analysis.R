@@ -182,6 +182,9 @@ df_rangescore <- df_rangescore %>%
 which(rowSums(df_biomass_clean[, -109]) == 0)
 which(rowSums(df_pc[, -109]) == 0)
 
+metadata$grid <- paste(df_rangescore$col, df_rangescore$row)
+metadata$bm <- rowSums(df_biomass_clean)
+
 which(is.numeric(df_pc))
 ###########################################################################################
 ############################### Alpha diversity ###########################################
@@ -199,6 +202,7 @@ kruskal.test(div_metric$Shannon_index ~ metadata$treatment)
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
 kruskal.test(div_metric$evenness ~ metadata$treatment)
 
+
 mod1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
 anova(mod1)
 plot(resid(mod1))
@@ -206,22 +210,63 @@ shapiro.test(resid(mod1))
 qqnorm(resid(mod1))
 qqline(resid(mod1))
 
-
 mod2 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$id_id))
 anova(mod2)
+plot(mod2)
 plot(resid(mod2))
 shapiro.test(resid(mod2))
 qqnorm(resid(mod2))
 qqline(resid(mod2))
 
-mod3 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site)+(1|metadata$id_id))
+mod3 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site)+(1|metadata$id_id), REML = F)
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
 
-anova(mod2,mod3)
+mod4 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) + 
+               (1|metadata$grid) )
+anova(mod4)
+plot(resid(mod4))
+shapiro.test(resid(mod4))
+lattice::qqmath(mod4)
 
-#mod 2 is the best model, mod 3 has lower AIC but does not pass normality assumption
+
+mod4a <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) + 
+               (1|metadata$grid) + (1|metadata$aspect))
+anova(mod4a)
+plot(resid(mod4a))
+shapiro.test(resid(mod4a))
+lattice::qqmath(mod4a)
+
+mod4b <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) + 
+                (1|metadata$grid) + (1|metadata$aspect) + (1|metadata$slope))
+anova(mod4b)
+plot(resid(mod4b))
+shapiro.test(resid(mod4b))
+lattice::qqmath(mod4b)
+
+mod4c <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) + 
+                (1|metadata$grid) + (1|metadata$aspect)+ (1|metadata$slope) + (1|metadata$elevation))
+anova(mod4c)
+plot(resid(mod4c))
+shapiro.test(resid(mod4c))
+lattice::qqmath(mod4c)
+
+
+AIC(mod4,mod4a, mod4b, mod4c)
+
+
+mod5 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) +
+               (1|metadata$grid))
+anova(mod5)
+plot(resid(mod5))
+plot(mod5)
+shapiro.test(resid(mod5))
+
+
+lmtest::lrtest( mod2, mod5)
+
+#mod 4 is the best model, mod 3 has lower AIC but does not pass normality assumption
 
 
 dfdivmeta <- cbind(div_metric, metadata, df_rangescore)
@@ -257,7 +302,7 @@ hist(trans.rain)
 
 
 #lmer models with exp transformation, not normal
-mod1 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$site))
+mod2 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$site))
 
 anova(mod1)
 plot(resid(mod1))
@@ -313,11 +358,36 @@ shapiro.test(resid(mod3))
 
 
 # Productivity ------------------------------------------------------------
+metadata$grid <- paste(df_rangescore$col, df_rangescore$row)
+metadata$bm <- rowSums(df_biomass_clean)
+range(metadata$bm)
+
+pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid) , metadata, REML = F)
+plot(pd_mod1)
+plot(resid(pd_mod1))
+lattice::qqmath(pd_mod1)
+shapiro.test(resid(pd_mod1))
+anova(pd_mod1)
+
+
+# functional groups -------------------------------------------------------
+
+fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
+fn_grp_nw <- readxl::read_xlsx("meta_fg_mohammad.xlsx")
+
+match(fn_grp$species, fn_grp_nw$species)
+
+table(is.na(match(fn_grp$species, fn_grp_nw$species)))
+table(is.na(match(colnames(df_pc), fn_grp$species)))
+sp <- which(is.na(match(colnames(df_pc), fn_grp$species))) %>% as.vector()
+
+p <- df_biomass_clean %>% 
+  select(all_of(sp)) %>% 
+  colnames()
 
 
 
-
-
+match(p, fn_grp$species)
 
 ###############################################################################################
 ##################   Beta - diversity #########################################################
