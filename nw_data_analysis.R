@@ -7,9 +7,12 @@ library(ape)
 library(nlme)
 #library(dae)
 
-df_biomass_clean <- read.csv("biomass_March1.csv",  row.names = 1)
-df_pc<- read.csv("percentcover_March1.csv",  row.names = 1) 
-df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") %>% separate(plot_indicator,into = c('col', 'row'), sep = 1)
+df_biomass_clean <- read.csv("biomass_March1.csv",  row.names = 1) %>% 
+  select(-c(id_id))
+df_pc<- read.csv("percentcover_March1.csv",  row.names = 1) %>% 
+  select(-c(id_id))
+df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") %>% 
+  separate(plot_indicator,into = c('col', 'row'), sep = 1)
 
 df_rangescore$col[df_rangescore$col == "A"] <- 1
 df_rangescore$col[df_rangescore$col == "B"] <- 2
