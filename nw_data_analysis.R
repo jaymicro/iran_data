@@ -276,6 +276,8 @@ anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
 
+kruskal.test(div_metric$simpson_index ~ metadata$treatment)
+boxplot(div_metric$simpson_index ~ metadata$treatment)
 
 #-------------berger-parker--------------------
 library("diverse")
@@ -305,124 +307,17 @@ shapiro.test(resid(mod3))
 
 
 
-#########################################################################################
-###################   productivity vs diversity #######################################'
-######################################################################################
-
-bm <- div_metric %>% 
-  mutate(trt = metadata$treatment) %>% 
-  filter(biomass < 5000)
-
-
-bm_nw <- div_metric_new%>% 
-  mutate(trt = metadata$treatment) %>% 
-  filter(biomass < 5000)
-
-ggplot(bm, aes(x = Shannon_index, y = scale(biomass, center = T), color = trt)) +
-  geom_point(aes(x = Shannon_index, y = biomass), alpha = 0.4 ) +
-  geom_smooth(method = "gam") +theme_bw()
-
-ggplot(bm, aes(x = Shannon_index, y = biomass, color = trt)) +
-  geom_point(aes(x = Shannon_index, y = biomass), alpha = 0.4 ) +
-  geom_smooth(method = "gam") +theme_bw()
-
-ggplot(bm , aes(x = simpson_index, y = biomass,  color = trt)) +
-  geom_point(aes(x = simpson_index, y = biomass), alpha = 0.4) +
-  geom_smooth(method = "gam")
-
-ggplot(bm , aes(x =  species_richness, y = biomass,  color = trt)) +
-  geom_point(aes(x =  species_richness, y = biomass), alpha = 0.4) +
-  geom_smooth(method = "gam")
-
-
-##############################################################################################
-
-normalization <- function(x){ 
-  p = (x - min(x))/(max(x) - min(x))
-  return (p)
-}
-
-test_pc <- lapply(df_pc, normalization) %>% 
-  as.data.frame()
-
-for (i in 1:ncol(test_pc)){
-  q=range(test_pc[,i])
-  print(q)
-}
-
-
-
-div_metric_new <- data.frame(
-  species_richness = specnumber(test_pc),
-  shannon_index = diversity(as.matrix(test_pc), index = "shannon", MARGIN = 1, base = exp(1)),
-  simpson_index = diversity(as.matrix(test_pc), index = "simpson", MARGIN = 1, base = exp(1)),
-  biomass = rowSums(df_biomass_clean))
-
-
-
-boxplot(div_metric_new$species_richness ~ metadata$treatment)
-boxplot(div_metric_new$shannon_index ~ metadata$treatment)
-boxplot(div_metric_new$simpson_index ~ metadata$treatment)
-
-
-boxplot(div_metric$species_richness ~ metadata$treatment)
-boxplot(div_metric$Shannon_index ~ metadata$treatment)
-boxplot(div_metric$simpson_index ~ metadata$treatment)
-
-
-kruskal.test(div_metric_new$species_richness ~ metadata$treatment)
-kruskal.test(div_metric_new$shannon_index ~ metadata$treatment)
-kruskal.test(div_metric_new$simpson_index ~ metadata$treatment)
-
-
-
-nw_pc <- scale(df_pc, center = T)
-
-div_metric_new_new <- data.frame(
-  species_richness = specnumber(nw_pc),
-  shannon_index = diversity(as.matrix(nw_pc), index = "shannon", MARGIN = 1, base = exp(1)),
-  simpson_index = diversity(as.matrix(nw_pc), index = "simpson", MARGIN = 1, base = exp(1)),
-  biomass = rowSums(df_biomass_clean))
-
-
-
-ggplot(bm_nw, aes(x = shannon_index, y = biomass, color = trt)) +
-  geom_point(aes(x = shannon_index, y = biomass), alpha = 0.4 ) +
-  geom_smooth(method = "lm") +theme_bw()
-
-ggplot(bm_nw, aes(x = shannon_index, y = biomass, color = trt)) +
-  geom_point(aes(x = shannon_index, y = biomass), alpha = 0.4 ) +
-  geom_smooth(method = "lm") +theme_bw()
-
-ggplot(bm_nw , aes(x = simpson_index, y = biomass,  color = trt)) +
-  geom_point(aes(x = simpson_index, y = biomass), alpha = 0.4) +
-  geom_smooth(method = "lm")
-
-ggplot(bm_nw , aes(x =  species_richness, y = biomass,  color = trt)) +
-  geom_point(aes(x =  species_richness, y = biomass), alpha = 0.4) +
-  geom_smooth(method = "lm")
-
-
-
-ggplot(bm, aes(x = biomass, y = trt, color = trt)) +
-  geom_point(aes(x = biomass, y = trt), alpha = 0.4 ) +
-  geom_smooth(method = "lm") +theme_bw()
-
-ggplot(bm, aes(x = biomass, y = trt, color = trt)) +
-  geom_point(aes(x = biomass, y = trt), alpha = 0.4 ) +
-  geom_smooth(method = "lm") +theme_bw()
-
-ggplot(bm, aes(x = biomass, y = trt,  color = trt)) +
-  geom_point(aes(x = biomass, y = trt), alpha = 0.4) +
-  geom_smooth(method = "lm")
 
 
 
 
-bm_nw$biomass <- (bm_nw$biomass - min(bm_nw$biomass))/(max(bm_nw$biomass) - min(bm_nw$biomass))
-range(bm_nw$biomass)
 
-table(bm_nw$trt)
+# Productivity ------------------------------------------------------------
+
+
+
+
+
 
 ###############################################################################################
 ##################   Beta - diversity #########################################################
