@@ -9,7 +9,18 @@ library(nlme)
 
 df_biomass_clean <- read.csv("biomass_correct.csv",  row.names = 1)
 df_pc<- read.csv("percentcover_correct.csv",  row.names = 1) 
-df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") 
+df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") %>% separate(plot_indicator,into = c('col', 'row'), sep = 1)
+
+df_rangescore$col[df_rangescore$col == "A"] <- 1
+df_rangescore$col[df_rangescore$col == "B"] <- 2
+df_rangescore$col[df_rangescore$col == "C"] <- 3
+df_rangescore$col[df_rangescore$col == "D"] <- 4
+df_rangescore$col[df_rangescore$col == "E"] <- 5
+df_rangescore$col[df_rangescore$col == "F"] <- 6
+df_rangescore$col[df_rangescore$col == "G"] <- 7
+df_rangescore$col[df_rangescore$col == "H"] <- 8
+
+
 # df_pc <- df_percentcover %>% 
 #   replace(is.na(.), 0) 
 # 
@@ -212,13 +223,40 @@ dfdivmeta <- cbind(div_metric, metadata, df_rangescore)
 anova(mod1, mod2, mod3)
 plot(ACF(mod1))
 
-cmod <- lme(exp(Shannon_index) ~ treatment, random = ~ 1|site, dfdivmeta, correlation=corAR1(form=~cYear|Site))
-anova(cmod)
-plot(ACF(cmod))
+dfdivmeta$col <- as.numeric(dfdivmeta$col)
+dfdivmeta$row <- as.numeric(dfdivmeta$row)
 
-dfdivmeta %>%
-  mutate(grid1 = str_extract(plot_indicator, pattern = "^[A-Z]"),
-         grid2 = str_extract(plot_indicator, pattern = "[:digit:]"))
+
+
+cmod <- gls(simpson_index ~ treatment, method = "ML", dfdivmeta)
+summary(cmod)
+plot(cmod)
+shapiro.test(residuals (cmod))
+
+cmod1 <- gls(simpson_index ~ treatment, method = "ML", 
+            correlation = corExp(form = ~col + row|id_id,
+                                 nugget = TRUE), dfdivmeta)
+summary(cmod1)
+plot(cmod1)
+shapiro.test(residuals (cmod1))
+
+cmod1 <- lmer(Shannon_index ~ treatment + (1|site), REML = FALSE, 
+            dfdivmeta)
+
+summary(cmod1)
+
+car::Anova(cmod, cmod1)
+plot(ACF(cmod))
+plot(resid(cmod))
+qqnorm(resid(cmod))
+qqline(resid(cmod))
+
+as.numeric(df_rangescore$col)
+
+lme(fixed = sqsp ~ Soil.Carbon * Soil.Nitrogen,
+            data = nutdata, random = ~ 1 | grid, method = "ML",
+            correlation = corExp(form = ~rown + coln,
+                                 nugget = TRUE))
 
 #########################################################################################################
 ########                        Simpson index
