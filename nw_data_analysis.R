@@ -165,8 +165,8 @@ metadata <- df_pc %>%
                           id_id == "kho_GA4" ~ "57.0775"))  
            
 names(df_biomass_clean)
-which(rowSums(df_biomass_clean[, -107]) == 0)
-which(rowSums(df_pc[, -107]) == 0)
+which(rowSums(df_biomass_clean[, -106]) == 0)
+which(rowSums(df_pc[, -106]) == 0)
 
 df_pc <- df_pc %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>% select(-id_id)
