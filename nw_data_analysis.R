@@ -165,8 +165,8 @@ metadata <- df_pc %>%
                           id_id == "kho_GA4" ~ "57.0775"))  
            
 names(df_biomass_clean)
-which(rowSums(df_biomass_clean[, -109]) == 0)
-which(rowSums(df_pc[, -109]) == 0)
+which(rowSums(df_biomass_clean[, -107]) == 0)
+which(rowSums(df_pc[, -107]) == 0)
 
 df_pc <- df_pc %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>% select(-id_id)
@@ -180,8 +180,8 @@ metadata <- metadata %>%
 df_rangescore <- df_rangescore %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
 
-which(rowSums(df_biomass_clean[, -109]) == 0)
-which(rowSums(df_pc[, -109]) == 0)
+which(rowSums(df_biomass_clean) == 0)
+which(rowSums(df_pc) == 0)
 
 metadata$grid <- paste(df_rangescore$col, df_rangescore$row)
 metadata$bm <- rowSums(df_biomass_clean)
@@ -363,10 +363,11 @@ metadata$grid <- paste(df_rangescore$col, df_rangescore$row)
 metadata$bm <- rowSums(df_biomass_clean)
 range(metadata$bm)
 
-pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid) , metadata, REML = F)
+pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid) + (1|aspect) , metadata, REML = F)
 plot(pd_mod1)
 plot(resid(pd_mod1))
 lattice::qqmath(pd_mod1)
+
 shapiro.test(resid(pd_mod1))
 anova(pd_mod1)
 
