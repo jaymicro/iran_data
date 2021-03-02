@@ -5,12 +5,16 @@ library(lme4)
 library(lmerTest)
 library(ape)
 library(nlme)
+library(glmmTMB)
 #library(dae)
+
 
 df_biomass_clean <- read.csv("biomass_March1.csv",  row.names = 1) 
 df_pc<- read.csv("percentcover_March1.csv",  row.names = 1) 
 df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") %>% 
   separate(plot_indicator,into = c('col', 'row'), sep = 1)
+
+as.numeric(unlist(df_pc))
 
 df_rangescore$col[df_rangescore$col == "A"] <- 1
 df_rangescore$col[df_rangescore$col == "B"] <- 2
@@ -162,7 +166,20 @@ metadata <- df_pc %>%
                           id_id == "kho_GA1" ~ "56.2393",
                           id_id == "kho_GA2" ~ "56.7447",
                           id_id == "kho_GA3" ~ "58.0815",
-                          id_id == "kho_GA4" ~ "57.0775"))  
+                          id_id == "kho_GA4" ~ "57.0775")) %>% 
+  mutate(cat_ele = case_when(
+    elevation<1500                  ~ "a",
+    elevation<2000 & elevation>1500 ~ "b",
+    elevation<2500 & elevation>2000 ~ "c",
+    TRUE                            ~ "d"
+  ))
+
+metadata$elevation <- as.numeric(metadata$elevation)
+metadata$slope <- as.numeric(metadata$slope)
+metadata$avg_temp <- as.numeric(metadata$avg_temp)
+metadata$avg_ppt <- as.numeric(metadata$avg_ppt)
+
+str(metadata)
            
 names(df_biomass_clean)
 which(rowSums(df_biomass_clean[, -106]) == 0)
@@ -204,7 +221,7 @@ kruskal.test(div_metric$simpson_index ~ metadata$treatment)
 kruskal.test(div_metric$evenness ~ metadata$treatment)
 
 
-mod1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site))
+mod1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment  + (1|metadata$site))
 anova(mod1)
 plot(resid(mod1))
 shapiro.test(resid(mod1))
@@ -256,16 +273,18 @@ lattice::qqmath(mod4c)
 
 AIC(mod4,mod4a, mod4b, mod4c)
 
+mod7 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + metadata$elevation + (1|metadata$grid))
+anova(mod7)
+plot(resid(mod7))
+plot(mod7)
+shapiro.test(resid(mod7))
+lattice::qqmath(mod7)
 
-mod5 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) +
-               (1|metadata$grid))
-anova(mod5)
-plot(resid(mod5))
-plot(mod5)
-shapiro.test(resid(mod5))
+lmtest::lrtest( mod4, mod7)
+AIC(mod4, mod5, mod6, mod7)
 
 
-lmtest::lrtest( mod2, mod5)
+plot(div_metric$Shannon_index ~ metadata$elevation)
 
 #mod 4 is the best model, mod 3 has lower AIC but does not pass normality assumption
 
@@ -387,19 +406,164 @@ p <- df_biomass_clean %>%
   select(all_of(sp)) %>% 
   colnames()
 
-
-
 match(p, fn_grp$species)
+
+df_biomass_clean <- df_biomass_clean %>% 
+  select(sort(tidyselect::peek_vars()))
+df_pc <- df_pc  %>% 
+  select(sort(tidyselect::peek_vars()))
+
+fn_grp <- fn_grp %>% 
+ mutate(span_form = paste(life_span,life_form, sep = " ")) 
+
+table(is.na(match(fn_grp$species, colnames(df_biomass_clean))))
+table(is.na(match(fn_grp$species, colnames(df_pc))))
+
+
+table(fn_grp$life_form)
+
+
+
+
+
+
+# Analyzing forbs ---------------------------------------------------------
+
+
+
+p_forb <- which((fn_grp$span_form == "Perennial Forb"))
+
+
+P_forb_pc <- df_pc %>% 
+  select(all_of(p_forb))
+
+p_forb_biomass <- df_biomass_clean %>% 
+  select(all_of(p_forb))
+
+P_forb_meta <- fn_grp %>% 
+  filter(span_form == "Perennial Forb")
+
+
+# alpha diversity of perennial forbs ------------------------------------
+p_forb_a_div <- data.frame(
+  p_forb_shan = diversity(P_forb_pc, index = "shannon"),
+  p_forb_simp = diversity(P_forb_pc, index = "simpson"),
+  p_forb_rich = specnumber(P_forb_pc),
+  div_metric)
+)
+
+
+p_forb_mod1  <- glmer(p_forb_a_div$p_forb_shan ~  metadata$treatment + (1|metadata$grid), 
+                      family = "poisson")
+plot(p_forb_mod1)
+plot(resid(p_forb_mod1))
+lattice::qqmath(p_forb_mod1)
+shapiro.test(resid(p_forb_mod1))
+anova(p_forb_mod1)
+
+hist(p_forb_a_div$p_forb_shan)
+boxplot(p_forb_a_div$p_forb_shan ~ metadata$treatment)
+
+p_forb_z <- glmmTMB(p_forb_a_div$p_forb_shan ~  metadata$treatment +
+          (1|metadata$grid), ziformula = ~1)
+
+plot(residuals(p_forb_z))
+car::Anova(p_forb_z)
+
+dim(p_forb_a_div)
+dim(metadata)
+kruskal.test(p_forb_a_div$p_forb_shan ~  metadata$treatment)
+
+
+
+# Annual Forbs ------------------------------------------------------------
+
+a_forb <- which((fn_grp$span_form == "Annual Forb"))
+
+
+a_forb_pc <- df_pc %>% 
+  select(all_of(a_forb))
+
+a_forb_biomass <- df_biomass_clean %>% 
+  select(all_of(a_forb))
+
+a_forb_meta <- fn_grp %>% 
+  filter(span_form == "Annual Forb")
+
+
+a_forb_a_div <- data.frame(
+  a_forb_shan = diversity(a_forb_pc, index = "shannon"),
+  a_forb_simp = diversity(a_forb_pc, index = "simpson"),
+  a_forb_rich = specnumber(a_forb_pc),
+  div_metric)
+)
+
+
+a_forb_mod <- aov(log1p(a_forb_shan) ~  metadata$treatment + Error(metadata$grid), a_forb_a_div)
+plot(dae::residuals.aovlist( a_forb_mod))
+lattice::qqmath(a_forb_mod)
+qqnorm(dae::residuals.aovlist(a_forb_mod))
+qqline(dae::residuals.aovlist(a_forb_mod))
+shapiro.test(dae::residuals.aovlist(a_forb_mod))
+
+hist(a_forb_a_div$a_forb_shan)
+kruskal.test(a_forb_a_div$a_forb_shan ~ metadata$treatment)
+boxplot(a_forb_a_div$a_forb_shan ~ metadata$treatment)
+
+
+# Perennial grass ---------------------------------------------------------
+
+p_grass <- which((fn_grp$span_form == "Perennial Grass"))
+
+
+p_grass_pc <- df_pc %>% 
+  select(all_of(p_grass))
+
+p_grass_biomass <- df_biomass_clean %>% 
+  select(all_of(p_grass))
+
+p_grass_meta <- fn_grp %>% 
+  filter(span_form == "Perennial Grass")
+
+
+p_grass_a_div <- data.frame(
+  p_grass_shan = diversity(a_forb_pc, index = "shannon"),
+  p_grass_simp = diversity(a_forb_pc, index = "simpson"),
+  p_grass_rich = specnumber(a_forb_pc),
+  div_metric)
+)
+
+
+
+p_grass_mod <- lmer(p_grass_shan ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), p_grass_a_div)
+plot(a_grass_mod)
+plot(resid(a_grass_mod))
+lattice::qqmath(a_grass_mod)
+str(p_grass_a_div)
+
+kruskal.test(p_grass_shan ~  metadata$treatment, p_grass_a_div) 
+t.test(p_grass_shan ~  metadata$treatment, p_grass_a_div)
+friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data = p_grass_a_div)
 
 ###############################################################################################
 ##################   Beta - diversity #########################################################
 ###############################################################################################
 
 
-dist_bray <- vegdist(df_pc)
+dist_bray <- vegdist(labdsv::hellinger(df_pc))
+
+set.seed(1234)
+adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp + metadata$avg_ppt)
 
 set.seed(1111)
 beta_div <- metaMDS(dist_bray, k =2, trymax = 999)
+
+pc <- ape::pcoa(dist_bray)
+plot.pcoa(pc)
+
+rd <- cca(labdsv::hellinger(df_pc) ~ metadata$treatment + metadata$elevation + metadata$avg_temp + metadata$avg_ppt )
+plot(rd)
+anova.cca(rd, by = "margin")
 
 
 # biomass vs dominance ----------------------------------------------------
