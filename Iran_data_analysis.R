@@ -244,6 +244,9 @@ t.test(p_grass_shan ~  metadata$treatment, p_grass_a_div)
 friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data = p_grass_a_div)
 
 
+# legume ------------------------------------------------------------------
+
+
 
 # Multivariate analysis ---------------------------------------------------
 
