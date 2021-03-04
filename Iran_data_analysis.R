@@ -5,6 +5,7 @@ library(tidyverse)
 library(vegan)
 library(lme4)
 library(lmerTest)
+library(glmmTMB)
 
 
 
@@ -83,7 +84,7 @@ anova(mod2)
 plot(resid(mod2))
 shapiro.test(resid(mod2))
 
-mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id) + (1|metadata$site))
+mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
 anova(mod3)
 plot(resid(mod3))
 shapiro.test(resid(mod3))
@@ -97,7 +98,7 @@ metadata$grid <- paste(df_rangescore$col, df_rangescore$row)
 metadata$bm <- rowSums(df_biomass_clean)
 range(metadata$bm)
 
-pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid) + (1|aspect) , metadata, REML = F)
+pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid)  , metadata, REML = F)
 plot(pd_mod1)
 plot(resid(pd_mod1))
 lattice::qqmath(pd_mod1)
@@ -110,7 +111,7 @@ anova(pd_mod1)
 
 fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
 
-table(is.na(match(fn_grp$species, fn_grp_nw$species)))
+table(is.na(match(fn_grp$species, fn_grp$species)))
 table(is.na(match(colnames(df_pc), fn_grp$species)))
 sp <- which(is.na(match(colnames(df_pc), fn_grp$species))) %>% as.vector()
 
@@ -161,8 +162,7 @@ p_forb_a_div <- data.frame(
 )
 
 
-p_forb_mod1  <- glmer(p_forb_a_div$p_forb_shan ~  metadata$treatment + (1|metadata$grid), 
-                      family = "poisson")
+p_forb_mod1  <- lmer(exp(p_forb_a_div$p_forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
 plot(p_forb_mod1)
 plot(resid(p_forb_mod1))
 lattice::qqmath(p_forb_mod1)
@@ -171,15 +171,8 @@ anova(p_forb_mod1)
 
 hist(p_forb_a_div$p_forb_shan)
 boxplot(p_forb_a_div$p_forb_shan ~ metadata$treatment)
+kruskal.test(p_forb_a_div$p_forb_shan ~ metadata$treatment)
 
-p_forb_z <- glmmTMB(p_forb_a_div$p_forb_shan ~  metadata$treatment +
-                      (1|metadata$grid), ziformula = ~1)
-
-plot(residuals(p_forb_z))
-car::Anova(p_forb_z)
-
-dim(p_forb_a_div)
-dim(metadata)
 kruskal.test(p_forb_a_div$p_forb_shan ~  metadata$treatment)
 
 # Annual Forbs ------------------------------------------------------------
@@ -205,12 +198,11 @@ a_forb_a_div <- data.frame(
 )
 
 
-a_forb_mod <- aov(log1p(a_forb_shan) ~  metadata$treatment + Error(metadata$grid), a_forb_a_div)
-plot(dae::residuals.aovlist( a_forb_mod))
+a_forb_mod <- lmer(sqrt(a_forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), a_forb_a_div)
+plot(resid(a_forb_mod))
 lattice::qqmath(a_forb_mod)
-qqnorm(dae::residuals.aovlist(a_forb_mod))
-qqline(dae::residuals.aovlist(a_forb_mod))
-shapiro.test(dae::residuals.aovlist(a_forb_mod))
+shapiro.test(resid(a_forb_mod))
+anova(a_forb_mod)
 
 hist(a_forb_a_div$a_forb_shan)
 kruskal.test(a_forb_a_div$a_forb_shan ~ metadata$treatment)
@@ -224,6 +216,7 @@ p_grass <- which((fn_grp$span_form == "Perennial Grass"))
 
 p_grass_pc <- df_pc %>% 
   select(all_of(p_grass))
+
 
 p_grass_biomass <- df_biomass_clean %>% 
   select(all_of(p_grass))
@@ -239,11 +232,12 @@ p_grass_a_div <- data.frame(
   div_metric)
 )
 
-p_grass_mod <- lmer(p_grass_shan ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), p_grass_a_div)
-plot(a_grass_mod)
-plot(resid(a_grass_mod))
-lattice::qqmath(a_grass_mod)
+p_grass_mod <- lmer(exp(p_grass_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), p_grass_a_div)
+plot(p_grass_mod)
+plot(resid(p_grass_mod))
+lattice::qqmath(p_grass_mod)
 str(p_grass_a_div)
+anova(p_grass_mod)
 
 kruskal.test(p_grass_shan ~  metadata$treatment, p_grass_a_div) 
 t.test(p_grass_shan ~  metadata$treatment, p_grass_a_div)
@@ -257,7 +251,8 @@ friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data
 dist_bray <- vegdist(df_pc)
 
 set.seed(1234)
-adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp + metadata$avg_ppt)
+adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp +
+         metadata$avg_ppt + metadata$aspect)
 
 set.seed(121)
 anosim(dist_bray, metadata$treatment)
@@ -265,21 +260,34 @@ anosim(dist_bray, metadata$treatment)
 set.seed(123456)
 anosim(dist_bray, metadata$elevation)
 
+spe.hel <- decostand(df_pc, "hellinger")
+bc<-vegdist(spe.hel, method="bray", binary=FALSE) 
 
 pc <- ape::pcoa(dist_bray)
 biplot(pc)
 
-spe.hel <- decostand(df_pc, "hellinger")
-bc<-vegdist(spe.hel, method="bray", binary=FALSE) 
+pc_hel <- ape::pcoa(bc)
+biplot(pc_hel)
+pc_hel$values
+
 
 set.seed(124)
-adonis(bc ~ metadata$treatment + metadata$elevation + metadata$avg_temp + metadata$avg_ppt)
+adonis(bc ~ metadata$treatment + metadata$elevation + metadata$avg_temp + metadata$avg_ppt) 
 
 simpleRDA <- rda(spe.hel ~  metadata$treatment +
                    metadata$elevation +
                    metadata$avg_temp +
                    metadata$avg_ppt +
-                   metadata$aspect +
-                   metadata$slope)
+                   metadata$slope+
+                   metadata$bm)
 
-anova.cca(simpleRDA, by ="margin")
+
+marginal_terms <-  anova.cca(simpleRDA, by ="margin", parallel = getOption("mc.cores"))
+rda_axis <- anova.cca(simpleRDA, by ="axis", parallel = getOption("mc.cores"))
+by_terms <- anova.cca(simpleRDA, by ="terms",parallel = getOption("mc.cores"))
+
+step.res <- ordiR2step(, , perm.max = 200)
+
+plot(simpleRDA)
+
+vif.cca(simpleRDA)
