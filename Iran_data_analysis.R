@@ -13,6 +13,7 @@ library(glmmTMB)
 
 df_biomass_clean <- read.csv("biomass_March1.csv",  row.names = 1) 
 
+
 df_pc<- read.csv("percentcover_March1.csv",  row.names = 1) 
 
 df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") %>% 
@@ -36,17 +37,23 @@ names(df_biomass_clean)
 which(rowSums(df_biomass_clean[, -106]) == 0)
 which(rowSums(df_pc[, -106]) == 0)
 
+
+
 df_pc <- df_pc %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>% select(-id_id)
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>%
+  filter(str_detect(id_id, "kho_") == FALSE) %>% select(-id_id)
 
 df_biomass_clean <- df_biomass_clean %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>% select(-id_id)
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>%
+  filter(str_detect(id_id, "kho_") == FALSE) %>% select(-id_id)
 
 metadata <- metadata %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))%>%
+  filter(str_detect(id_id, "kho_") == FALSE)
 
 df_rangescore <- df_rangescore %>% 
-  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))
+  slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))%>%
+  filter(str_detect(id_id, "kho_") == FALSE)
 
 which(rowSums(df_biomass_clean) == 0)
 which(rowSums(df_pc) == 0)
@@ -69,20 +76,22 @@ div_metric <- data.frame(
   simpson_index = diversity(as.matrix(df_pc), index = "simpson", MARGIN = 1, base = exp(1)),
   biomass = rowSums(df_biomass_clean))
 
-mod4 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$site) + 
-               (1|metadata$grid) )
+mod4 <- lmer(expm1(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+
 anova(mod4)
 plot(resid(mod4))
 shapiro.test(resid(mod4))
 lattice::qqmath(mod4)
+boxplot(div_metric$Shannon_index ~ metadata$treatment)
 
 
 # Simpson index -----------------------------------------------------------
 
-mod2 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id))
+mod2 <- lmer((div_metric$simpson_index) ~ metadata$treatment + (1|metadata$id_id))
 anova(mod2)
 plot(resid(mod2))
 shapiro.test(resid(mod2))
+hist(div_metric$simpson_index)
 
 mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
 anova(mod3)
@@ -98,7 +107,7 @@ metadata$grid <- paste(df_rangescore$col, df_rangescore$row)
 metadata$bm <- rowSums(df_biomass_clean)
 range(metadata$bm)
 
-pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid)  , metadata, REML = F)
+pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid), metadata, REML = F)
 plot(pd_mod1)
 plot(resid(pd_mod1))
 lattice::qqmath(pd_mod1)
@@ -106,7 +115,7 @@ lattice::qqmath(pd_mod1)
 shapiro.test(resid(pd_mod1))
 anova(pd_mod1)
 
-
+boxplot(sqrt(metadata$bm) ~ metadata$treatment)
 # functional groups -------------------------------------------------------
 
 fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
@@ -158,8 +167,7 @@ p_forb_a_div <- data.frame(
   p_forb_shan = diversity(P_forb_pc, index = "shannon"),
   p_forb_simp = diversity(P_forb_pc, index = "simpson"),
   p_forb_rich = specnumber(P_forb_pc),
-  div_metric)
-)
+  div_metric))
 
 
 p_forb_mod1  <- lmer(exp(p_forb_a_div$p_forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
@@ -198,7 +206,7 @@ a_forb_a_div <- data.frame(
 )
 
 
-a_forb_mod <- lmer(sqrt(a_forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), a_forb_a_div)
+a_forb_mod <- lmer(expm1(a_forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), a_forb_a_div)
 plot(resid(a_forb_mod))
 lattice::qqmath(a_forb_mod)
 shapiro.test(resid(a_forb_mod))
@@ -239,6 +247,10 @@ lattice::qqmath(p_grass_mod)
 str(p_grass_a_div)
 anova(p_grass_mod)
 
+boxplot(exp(p_grass_a_div$p_grass_shan) ~ metadata$treatment)
+boxplot(exp(p_grass_a_div$p_grass_simp) ~ metadata$treatment)
+boxplot((p_grass_a_div$p_grass_rich) ~ metadata$treatment)
+
 kruskal.test(p_grass_shan ~  metadata$treatment, p_grass_a_div) 
 t.test(p_grass_shan ~  metadata$treatment, p_grass_a_div)
 friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data = p_grass_a_div)
@@ -246,6 +258,83 @@ friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data
 
 # legume ------------------------------------------------------------------
 
+legumeyes <- which((fn_grp$legume== "Y"))
+
+
+legumeyes_pc <- df_pc %>% 
+  select(all_of(legumeyes))
+
+
+# legumeyes_biomass <- df_biomass_clean %>% 
+#   select(all_of(legumeyes))
+
+
+legumeyes_div <- data.frame(
+  legumeyes_shan = diversity(legumeyes_pc, index = "shannon"),
+  legumeyes_simp = diversity(legumeyes_pc, index = "simpson"),
+  legumeyes_rich = specnumber(legumeyes_pc),
+  div_metric)
+)
+
+quantile(legumeyes_div$legumeyes_shan)
+quantile(legumeyes_div$legumeyes_simp)
+
+legumeyes_mod <- lmer(exp(legumeyes_shan) ~  metadata$treatment + df_rangescore$range_score + (1|metadata$grid) + (1|metadata$site), legumeyes_div)
+plot(legumeyes_mod)
+plot(resid(legumeyes_mod))
+lattice::qqmath(legumeyes_mod)
+anova(legumeyes_mod)
+
+kruskal.test(legumeyes_div$legumeyes_shan, metadata$treatment)
+kruskal.test(legumeyes_div$legumeyes_simp, metadata$treatment)
+boxplot(exp(legumeyes_div$legumeyes_shan) ~ metadata$treatment)
+boxplot(exp(legumeyes_div$legumeyes_simp) ~ metadata$treatment)
+boxplot((legumeyes_div$legumeyes_rich) ~ metadata$treatment)
+ggplot(metadata, aes(legumeyes_div$legumeyes_shan, treatment)) +
+  geom_violin()
+
+##Legume richness
+legumeyes_modrich <- glmer((legumeyes_rich) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), legumeyes_div, family = "poisson")
+plot(legumeyes_modrich)
+plot(resid(legumeyes_modrich))
+lattice::qqmath(legumeyes_modrich)
+car::Anova(legumeyes_modrich)
+
+kruskal.test(p_grass_shan ~  metadata$treatment, p_grass_a_div) 
+t.test(p_grass_shan ~  metadata$treatment, p_grass_a_div)
+friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data = p_grass_a_div)
+
+##rangescore
+range_mod <- lmer(df_rangescore$range_score ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+plot(range_mod)
+plot(resid(range_mod))
+lattice::qqmath(range_mod)
+anova(range_mod)
+boxplot(df_rangescore$range_class ~ metadata$treatment)
+
+
+# Biomass by functional group ---------------------------------------------
+p_forb_biomass$bio_prop <- rowSums(p_forb_biomass)/metadata$bm
+p_grass_biomass$bio_prop <- rowSums(p_grass_biomass)/metadata$bm
+a_forb_biomass$bio_prop <- rowSums(a_forb_biomass)/metadata$bm
+
+###Perennial forb biomass
+p_forb_bio_mod <- lmer(expm1(p_forb_biomass$bio_prop) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+plot(p_forb_bio_mod)
+plot(resid(p_forb_bio_mod ))
+lattice::qqmath(p_forb_bio_mod )
+car::Anova(p_forb_bio_mod)
+boxplot(p_forb_biomass$bio~ metadata$treatment)
+
+
+##Annual forb biomass
+a_forb_bio_mod <- lmer(log1p(a_forb_biomass$bio_prop) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+plot(a_forb_bio_mod)
+plot(resid(a_forb_bio_mod ))
+lattice::qqmath(a_forb_bio_mod )
+car::Anova(a_forb_bio_mod)
+boxplot(a_forb_biomass$bio~ metadata$treatment)
+hist(a_forb_biomass$bio_prop)
 
 
 # Multivariate analysis ---------------------------------------------------
