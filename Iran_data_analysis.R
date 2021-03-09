@@ -144,6 +144,48 @@ table(is.na(match(fn_grp$species, colnames(df_pc))))
 
 table(fn_grp$life_form)
 
+# Forbs and grasses -------------------------------------------------------
+
+
+forb <- which((fn_grp$life_form == "Forb"))
+
+
+forb_pc <- df_pc %>% 
+  select(all_of(forb))
+
+forb_biomass <- df_biomass_clean %>% 
+  select(all_of(forb))
+
+
+Grass <- which((fn_grp$life_form == "Grass"))
+
+
+Grass_pc <- df_pc %>% 
+  select(all_of(Grass))
+
+Grass_biomass <- df_biomass_clean %>% 
+  select(all_of(Grass))
+
+
+
+# diversity of forbs and grasses ------------------------------------------
+
+forb_a_div <- data.frame(
+  forb_shan = diversity(forb_pc, index = "shannon"),
+  forb_simp = diversity(forb_pc, index = "simpson"),
+  forb_rich = specnumber(forb_pc),
+  div_metric)
+)
+
+Grass_a_div <- data.frame(
+  Grass_shan = diversity(Grass_pc, index = "shannon"),
+  Grass_simp = diversity(Grass_pc, index = "simpson"),
+  Grass_rich = specnumber(Grass_pc),
+  div_metric)
+)
+
+
+
 # Analyzing forbs ---------------------------------------------------------
 
 
@@ -167,7 +209,8 @@ p_forb_a_div <- data.frame(
   p_forb_shan = diversity(P_forb_pc, index = "shannon"),
   p_forb_simp = diversity(P_forb_pc, index = "simpson"),
   p_forb_rich = specnumber(P_forb_pc),
-  div_metric))
+  div_metric)
+)
 
 
 p_forb_mod1  <- lmer(exp(p_forb_a_div$p_forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
@@ -258,21 +301,22 @@ friedman.test(p_grass_a_div$p_grass_shan, metadata$treatment,metadata$grid, data
 
 # legume ------------------------------------------------------------------
 
-legumeyes <- which((fn_grp$legume== "Y"))
+legume_forb <- which(fn_grp$legume== "Y" & fn_grp$life_form != "Woody")
+legumeforb_pc <- df_pc %>% 
+  select(all_of(legume_forb))
 
-
-legumeyes_pc <- df_pc %>% 
-  select(all_of(legumeyes))
+legumeforb_biomass <- df_biomass_clean %>% 
+  select(all_of(legume_forb))
 
 
 # legumeyes_biomass <- df_biomass_clean %>% 
 #   select(all_of(legumeyes))
 
 
-legumeyes_div <- data.frame(
-  legumeyes_shan = diversity(legumeyes_pc, index = "shannon"),
-  legumeyes_simp = diversity(legumeyes_pc, index = "simpson"),
-  legumeyes_rich = specnumber(legumeyes_pc),
+legumeforb_div <- data.frame(
+  legumeyes_shan = diversity(legumeforb_pc, index = "shannon"),
+  legumeyes_simp = diversity(legumeforb_pc, index = "simpson"),
+  legumeyes_rich = specnumber(legumeforb_pc),
   div_metric)
 )
 
@@ -321,10 +365,10 @@ a_forb_biomass$bio_prop <- rowSums(a_forb_biomass)/metadata$bm
 ###Perennial forb biomass
 p_forb_bio_mod <- lmer(expm1(p_forb_biomass$bio_prop) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
 plot(p_forb_bio_mod)
-plot(resid(p_forb_bio_mod ))
-lattice::qqmath(p_forb_bio_mod )
+plot(resid(p_forb_bio_mod))
+lattice::qqmath(p_forb_bio_mod)
 car::Anova(p_forb_bio_mod)
-boxplot(p_forb_biomass$bio~ metadata$treatment)
+boxplot(p_forb_biomass$bio ~ metadata$treatment)
 
 
 ##Annual forb biomass
@@ -337,6 +381,39 @@ boxplot(a_forb_biomass$bio~ metadata$treatment)
 hist(a_forb_biomass$bio_prop)
 
 
+
+# Biomass vs productivity -------------------------------------------------
+
+mod_bm <- lmer(sqrt(metadata$bm) ~ forb_a_div$forb_shan * metadata$treatment+
+             Grass_a_div$Grass_shan * metadata$treatment+
+             #legumeforb_div$simpson_index *metadata$treatment  +
+             (1|metadata$site) + (1|metadata$grid))
+summary(mod_bm)
+anova(mod_bm) %>% broom::tidy() %>% View()
+hist(resid(mod_bm))
+shapiro.test(resid(mod_bm))
+
+plot(sqrt(metadata$bm) ~ legumeforb_div$simpson_index)
+plot(sqrt(metadata$bm) ~ Grass_a_div$Grass_simp)
+plot(sqrt(metadata$bm) ~ forb_a_div$forb_simp)
+boxplot(sqrt(metadata$bm) ~ metadata$treatment)
+
+
+
+plt_df <- data.frame(grass_shan = Grass_a_div$Grass_shan,
+                     forb_shan = forb_a_div$forb_shan,
+                     biomass = metadata$bm,
+                     treatment = metadata$treatment) %>% 
+  pivot_longer(-c(treatment, biomass))
+
+
+
+ggplot(plt_df, aes(x = value, y = sqrt(biomass)))+
+  geom_point(aes(x = value, y = sqrt(biomass), color = treatment ),size =4, alpha = 0.3) +
+  facet_grid(name ~ treatment ) +
+  stat_smooth(method = "lm")
+
+car::vif(mod_bm)
 # Multivariate analysis ---------------------------------------------------
 
 
