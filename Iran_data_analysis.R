@@ -340,17 +340,17 @@ hist(a_forb_biomass$bio_prop)
 # Multivariate analysis ---------------------------------------------------
 
 
-dist_bray <- vegdist(df_pc)
+dist_bray <- vegdist(df_pc, method = "euclidean")
 
 set.seed(1234)
-adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp +
-         metadata$avg_ppt + metadata$aspect)
+veg_permanova <- adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp +
+         metadata$avg_ppt + metadata$aspect,parallel = getOption("mc.cores"))
 
 set.seed(121)
-anosim(dist_bray, metadata$treatment)
+veg_anosim1 <- anosim(dist_bray, metadata$treatment, parallel = getOption("mc.cores"))
 
 set.seed(123456)
-anosim(dist_bray, metadata$elevation)
+veg_anosim2 <- (dist_bray, metadata$elevation, parallel = getOption("mc.cores"))
 
 spe.hel <- decostand(df_pc, "hellinger")
 bc<-vegdist(spe.hel, method="bray", binary=FALSE) 
