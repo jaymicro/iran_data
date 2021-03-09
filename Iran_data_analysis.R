@@ -350,7 +350,7 @@ set.seed(121)
 veg_anosim1 <- anosim(dist_bray, metadata$treatment, parallel = getOption("mc.cores"))
 
 set.seed(123456)
-veg_anosim2 <- (dist_bray, metadata$elevation, parallel = getOption("mc.cores"))
+veg_anosim2 <- anosim(dist_bray, metadata$elevation, parallel = getOption("mc.cores"))
 
 spe.hel <- decostand(df_pc, "hellinger")
 bc<-vegdist(spe.hel, method="bray", binary=FALSE) 
