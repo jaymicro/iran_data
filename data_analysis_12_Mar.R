@@ -55,6 +55,17 @@ shapiro.test(resid(mod3))
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
 boxplot(div_metric$simpson_index ~ metadata$treatment)
 
+# Richness ----------------------------------------------------------------
+
+mod_rich <- lmer(div_metric$species_richness ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+
+anova(mod_rich)
+plot(resid(mod_rich))
+shapiro.test(resid(mod_rich))
+lattice::qqmath(mod_rich)
+boxplot(div_metric$Shannon_index ~ metadata$treatment)
+hist(resid(mod_rich))
+
 
 # Productivity ------------------------------------------------------------
 pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid), metadata, REML = F)
@@ -75,8 +86,9 @@ range_mod <- lmer(df_rangescore$range_score ~  metadata$treatment + (1|metadata$
 plot(range_mod)
 plot(resid(range_mod))
 lattice::qqmath(range_mod)
+hist(resid(range_mod))
 anova(range_mod)
-boxplot(df_rangescore$range_class ~ metadata$treatment)
+boxplot(df_rangescore$range_score ~ metadata$treatment)
 
 
 # Biomass by functional group ---------------------------------------------

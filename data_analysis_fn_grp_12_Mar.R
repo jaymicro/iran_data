@@ -208,3 +208,136 @@ summary(legume_inc_shrub_mod2)
 
 boxplot(legume_inc_shrub_a_div$legume_rich ~ metadata$treatment)
 
+
+
+# Exotic vs native analysis -----------------------------------------------
+
+######Exotic############
+Exotic <- which((fn_grp$exotic == "Y"))
+
+Exotic_pc <- df_pc %>% 
+  select(all_of(Exotic))
+
+Exotic_biomass <- df_biomass_clean %>% 
+  select(all_of(Exotic))
+
+
+Exotic_a_div <- data.frame(
+  Exotic_shan_prop = diversity(Exotic_pc, index = "shannon"),
+  Exotic_simp_prop = diversity(Exotic_pc, index = "simpson"),
+  Exotic_rich_prop = specnumber(Exotic_pc))
+
+###poor residuals for all alpha diversity metric
+Exotic_mod1  <- lmer(log1p(Exotic_a_div$Exotic_simp) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+plot(Exotic_mod1)
+plot(resid(Exotic_mod1))
+
+lattice::qqmath(Exotic_mod1)
+shapiro.test(resid(Exotic_mod1))
+anova(Exotic_mod1)
+hist(Exotic_a_div$Exotic_shan)
+
+boxplot(Exotic_a_div$Exotic_shan ~ metadata$treatment)
+kruskal.test(Exotic_a_div$Exotic_shan ~ metadata$treatment)
+
+#Proportion of exotic biomass
+
+prop_exotic_biomass <- rowSums(Exotic_biomass)/rowSums(df_biomass_clean)
+quantile(prop_exotic_biomass)
+
+
+mod_exo_biomass <- lmer(exp(prop_exotic_biomass) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+plot(mod_exo_biomass)
+plot(resid(mod_exo_biomass))
+
+lattice::qqmath(mod_exo_biomass)
+shapiro.test(resid(mod_exo_biomass))
+anova(mod_exo_biomass)
+hist(resid(mod_exo_biomass))
+
+boxplot(Exotic_a_div$Exotic_shan ~ metadata$treatment)
+kruskal.test(Exotic_a_div$Exotic_shan ~ metadata$treatment)
+
+####native
+
+Native <- which((fn_grp$exotic == "N"))
+
+Native_pc <- df_pc %>% 
+  select(all_of(Native))
+
+Native_biomass <- df_biomass_clean %>% 
+  select(all_of(Native))
+
+
+Native_a_div <- data.frame(
+  Native_shan_prop = diversity(Native_pc, index = "shannon"),
+  Native_simp_prop = diversity(Native_pc, index = "simpson"),
+  Native_rich_prop = specnumber(Native_pc))
+
+###poor residuals for all alpha diversity metric
+Native_mod1  <- lmer(Native_a_div$Native_rich_prop ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+plot(Native_mod1)
+plot(resid(Native_mod1))
+
+lattice::qqmath(Native_mod1)
+
+shapiro.test(resid(Native_mod1))
+car::Anova(Native_mod1, test = "F")
+hist(Native_a_div$Native_shan)
+
+boxplot(Native_a_div$Native_rich_prop ~ metadata$treatment)
+kruskal.test(Native_a_div$Native_rich_prop ~ metadata$treatment)
+
+##native vs treatment & exotic
+
+native_exo_tret  <- lmer(Native_a_div$Native_rich_prop ~  Exotic_a_div$Exotic_rich* metadata$treatment  + (1|metadata$grid) + (1|metadata$site))
+plot(native_exo_tret)
+plot(resid(native_exo_tret))
+car::vif(native_exo_tret)
+lattice::qqmath(native_exo_tret)
+
+shapiro.test(resid(native_exo_tret))
+car::Anova(native_exo_tret,type=3)
+summary(native_exo_tret)
+hist(Native_a_div$Native_shan)
+
+boxplot(Native_a_div$Native_rich_prop ~ metadata$treatment)
+kruskal.test(Native_a_div$Native_rich_prop ~ metadata$treatment)
+
+
+plt_df <- data.frame(nat_ric = Native_a_div$Native_rich_prop,
+                     exo_ric = Exotic_a_div$Exotic_rich,
+                     treat = metadata$treatment)
+ggplot(plt_df, aes(x = treat, y = nat_ric, color = treat))+
+  geom_boxplot() +
+  ggpubr::stat_compare_means(method = "kruskal")
+
+ggplot(plt_df, aes(x = treat, y = exo_ric, color = treat))+
+  geom_boxplot() +
+  ggpubr::stat_compare_means(method = "kruskal")
+
+
+
+# Palatibilty -------------------------------------------------------------
+
+palatable_i <- which((fn_grp$class == "I"))
+
+palatable_i_pc <- df_pc %>% 
+  select(all_of(palatable_i))
+
+palatable_i_biomass <- df_biomass_clean %>% 
+  select(all_of(palatable_i))
+
+
+palatable_i_a_div <- data.frame(
+  palatable_i_shan = diversity(palatable_i_pc, index = "shannon"),
+  palatable_i_simp = diversity(palatable_i_pc, index = "simpson"),
+  palatable_i_rich = specnumber(palatable_i_pc))
+
+
+palatable_mod  <- lmer(palatable_i_biomass ~  metadata$treatment  + (1|metadata$grid) + (1|metadata$site))
+plot(palatable_mod)
+plot(resid(palatable_mod))
+car::vif(palatable_mod)
+lattice::qqmath(palatable_mod)
+
