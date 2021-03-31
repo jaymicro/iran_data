@@ -17,7 +17,7 @@ df_pc<- read.csv("pc_12_Mar.csv",  row.names = 1)
 
 df_rangescore <- read.csv("df_range_score_12_Mar.csv", row.names = 1)
 
-metadata<- read.csv("meta_12_Mar.csv")
+metadata<- read.csv("metadata.csv")
 
 fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
 
@@ -34,18 +34,18 @@ div_metric <- data.frame(
   simpson_index = diversity(as.matrix(df_pc), index = "simpson", MARGIN = 1, base = exp(1)),
   biomass = rowSums(df_biomass_clean))
 
-mod4 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+mod4 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment * metadata$site + (1|metadata$grid))
 
 anova(mod4)
 plot(resid(mod4))
 shapiro.test(resid(mod4))
 lattice::qqmath(mod4)
-boxplot(div_metric$Shannon_index ~ metadata$treatment)
+boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
 
 
 # Simpson index -----------------------------------------------------------
 
-mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment * metadata$site + (1|metadata$grid) )
 anova(mod3)
 plot(resid(mod3))
 hist(resid(mod3))
@@ -53,22 +53,22 @@ hist(resid(mod3))
 shapiro.test(resid(mod3))
 
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
-boxplot(div_metric$simpson_index ~ metadata$treatment)
+boxplot(div_metric$simpson_index ~ metadata$treatment * metadata$site)
 
 # Richness ----------------------------------------------------------------
 
-mod_rich <- lmer(div_metric$species_richness ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+mod_rich <- lmer(div_metric$species_richness ~ metadata$treatment * metadata$site + (1|metadata$grid))
 
 anova(mod_rich)
 plot(resid(mod_rich))
 shapiro.test(resid(mod_rich))
 lattice::qqmath(mod_rich)
-boxplot(div_metric$Shannon_index ~ metadata$treatment)
+boxplot(div_metric$Shannon_index ~ metadata$treatment * metadata$site)
 hist(resid(mod_rich))
 
 
 # Productivity ------------------------------------------------------------
-pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid), metadata, REML = F)
+pd_mod1 <- lmer(sqrt(bm) ~ treatment * site + (1|grid), metadata, REML = F)
 plot(pd_mod1)
 plot(resid(pd_mod1))
 lattice::qqmath(pd_mod1)
@@ -76,7 +76,7 @@ lattice::qqmath(pd_mod1)
 shapiro.test(resid(pd_mod1))
 anova(pd_mod1)
 
-boxplot(sqrt(metadata$bm) ~ metadata$treatment)
+boxplot(sqrt(metadata$bm) ~ metadata$treatment * metadata$site)
 
 # functional groups - see data_analysis_fn_grp_12_Mar.R -------------------------------------------------------
 
@@ -157,11 +157,14 @@ set.seed(1234)
 veg_permanova <- adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp +
          metadata$avg_ppt + metadata$aspect,parallel = getOption("mc.cores"))
 
+
 set.seed(121)
 veg_anosim1 <- anosim(dist_bray, metadata$treatment, parallel = getOption("mc.cores"))
+veg_anosim1
 
 set.seed(123456)
 veg_anosim2 <- anosim(dist_bray, metadata$elevation, parallel = getOption("mc.cores"))
+veg_anosim2
 
 spe.hel <- decostand(df_pc, "hellinger")
 bc<-vegdist(spe.hel, method="bray", binary=FALSE) 
@@ -171,7 +174,7 @@ biplot(pc)
 
 pc_hel <- ape::pcoa(bc)
 biplot(pc_hel)
-pc_hel$values
+pc_hel$values[1:2,]
 
 
 set.seed(124)
