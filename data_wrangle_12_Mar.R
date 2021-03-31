@@ -14,7 +14,7 @@ df_pc<- read.csv("percentcover_March1.csv",  row.names = 1)
 df_rangescore <- readxl::read_xlsx("df_range_score.xlsx") %>% 
   separate(plot_indicator,into = c('col', 'row'), sep = 1)
 
-metadata<- read.csv("metadata.csv")
+metadata<- read.csv("../metadata.csv")
 
 
 # Data wrangle ------------------------------------------------------------
@@ -36,19 +36,25 @@ which(rowSums(df_pc[, -106]) == 0)
 
 df_pc <- df_pc %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>%
-  filter(str_detect(id_id, "kho_") == FALSE) %>% select(-id_id)
+  filter(str_detect(id_id, "kho_") == FALSE) %>% 
+  filter(str_detect(id_id, "ramian_") == FALSE) %>% 
+  select(-id_id)
 
 df_biomass_clean <- df_biomass_clean %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024)) %>%
-  filter(str_detect(id_id, "kho_") == FALSE) %>% select(-id_id)
+  filter(str_detect(id_id, "kho_") == FALSE) %>% 
+  filter(str_detect(id_id, "ramian_") == FALSE) %>%
+  select(-id_id)
 
 metadata <- metadata %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))%>%
-  filter(str_detect(id_id, "kho_") == FALSE)
+  filter(str_detect(id_id, "kho_") == FALSE) %>% 
+  filter(str_detect(id_id, "ramian_") == FALSE)
 
 df_rangescore <- df_rangescore %>% 
   slice(-c(128,  192,  256, 489, 505, 576,  704,  768,  832,  896,  960, 1024))%>%
-  filter(str_detect(id_id, "kho_") == FALSE)
+  filter(str_detect(id_id, "kho_") == FALSE) %>% 
+  filter(str_detect(id_id, "ramian_") == FALSE)
 
 which(rowSums(df_biomass_clean) == 0)
 which(rowSums(df_pc) == 0)
