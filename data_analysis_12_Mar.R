@@ -34,13 +34,20 @@ div_metric <- data.frame(
   simpson_index = diversity(as.matrix(df_pc), index = "simpson", MARGIN = 1, base = exp(1)),
   biomass = rowSums(df_biomass_clean))
 
-mod4 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+mod.shan1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment * metadata$site + (1|metadata$grid))
 
-anova(mod4)
-plot(resid(mod4))
-shapiro.test(resid(mod4))
-lattice::qqmath(mod4)
+anova(mod.shan1)
+plot(resid(mod.shan1))
+shapiro.test(resid(mod.shan1))
+lattice::qqmath(mod.shan1)
 boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
+
+
+
+
+boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
+
+
 
 
 # Simpson index -----------------------------------------------------------
@@ -57,14 +64,11 @@ boxplot(div_metric$simpson_index ~ metadata$treatment * metadata$site)
 
 # Richness ----------------------------------------------------------------
 
-mod_rich <- lmer(div_metric$species_richness ~ metadata$treatment * metadata$site + (1|metadata$grid))
+mod_rich <- glmer(div_metric$species_richness ~ metadata$treatment * metadata$site + (1|metadata$grid), family="poisson")
 
-anova(mod_rich)
-plot(resid(mod_rich))
-shapiro.test(resid(mod_rich))
-lattice::qqmath(mod_rich)
-boxplot(div_metric$Shannon_index ~ metadata$treatment * metadata$site)
-hist(resid(mod_rich))
+Anova(mod_rich)
+
+boxplot(div_metric$species_richness ~ metadata$treatment * metadata$site)
 
 
 # Productivity ------------------------------------------------------------
@@ -79,17 +83,53 @@ anova(pd_mod1)
 boxplot(sqrt(metadata$bm) ~ metadata$treatment * metadata$site)
 
 # functional groups - see data_analysis_fn_grp_12_Mar.R -------------------------------------------------------
-
+# all groups are having similar responses with fg, also did exotic and native but not meeting normality
 
 ##rangescore
-range_mod <- lmer(df_rangescore$range_score ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
-plot(range_mod)
-plot(resid(range_mod))
-lattice::qqmath(range_mod)
-hist(resid(range_mod))
-anova(range_mod)
-boxplot(df_rangescore$range_score ~ metadata$treatment)
+df_rangescore$range_score[df_rangescore$range_score > 100] <- 100  
 
+mod.site.score <- lmer((df_rangescore$range_score) ~ metadata$treatment *metadata$site  + (1|metadata$grid))
+anova(mod.site.score)
+plot(resid(mod.site.score))
+shapiro.test(resid(mod.site.score))
+lattice::qqmath(mod.site.score)
+
+boxplot(df_rangescore$range_score ~ metadata$treatment*metadata$site)
+
+mod.site.score <- glmer(metadata$treatment~  (df_rangescore$range_score) *metadata$site  + (1|metadata$grid), family = "binomial")
+Anova(mod.site.score)
+plot(resid(mod.site.score))
+shapiro.test(resid(mod.site.score))
+lattice::qqmath(mod.site.score)
+
+boxplot(df_rangescore$range_score ~ metadata$treatment*metadata$site)
+
+
+
+#create new variable to adjust for range score
+
+
+# which(metadata$score==0)
+# 
+# df_pc%>%
+#   slice(194, 196, 198, 200)%>%
+#   rowSums()
+#   View()
+
+df_rangescore$range_score <- replace(df_rangescore$range_score, which(df_rangescore$range_score==0), c(68, 74, 72, 67.5))
+
+metadata=metadata%>%
+  mutate(shan=div_metric$Shannon_index,
+         score=df_rangescore$range_score,
+         shan.score=shan/(score/100+1))
+
+mod.shan.score <- lmer((metadata$shan.score) ~ metadata$treatment *metadata$site  + (1|metadata$grid))
+anova(mod.shan.score)
+plot(resid(mod.shan.score))
+shapiro.test(resid(mod.shan.score))
+lattice::qqmath(mod.shan.score)
+
+boxplot(metadata$shan.score ~ metadata$treatment*metadata$site)
 
 # Biomass by functional group ---------------------------------------------
 p_forb_biomass$bio_prop <- rowSums(p_forb_biomass)/metadata$bm
