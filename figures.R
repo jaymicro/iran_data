@@ -38,6 +38,13 @@ ggplot(div_fig, aes(x = treatment, y = exp(Shannon_index), fill = treatment)) +
   ggpubr::stat_compare_means(method = "kruskal.test",
                              label.y = 15)
   
+ggplot(div_fig, aes(x = treatment, y = (species_richness), fill = treatment)) +
+  geom_violin(aes(x = treatment, y = (species_richness))) +
+  geom_boxplot(aes(x = treatment, y = (species_richness)), width = 0.25, lwd = 1) +
+  facet_grid(. ~ site ) +
+  theme_bw() +
+  ggpubr::stat_compare_means(method = "kruskal.test",
+                             label.y = 25)
 
 
 ggplot(div_fig, aes(x = treatment, y = exp(simpson_index), fill = treatment)) +
@@ -56,3 +63,13 @@ ggplot(div_fig, aes(x = treatment, y = sqrt(biomass), fill = treatment)) +
   ggpubr::stat_compare_means(method = "kruskal.test",
                              label.y = 40) +
   ylim(c(0,45))
+
+
+ggplot(div_fig, aes(x = treatment, y = df_rangescore$range_score, fill = treatment)) +
+  geom_violin(aes(x = treatment, y = df_rangescore$range_score, fill = treatment)) +
+  geom_boxplot(aes(x = treatment, y = df_rangescore$range_score), width = 0.25, lwd=1) +
+  facet_grid(. ~ site ) +
+  theme_bw() +
+  ggpubr::stat_compare_means(method = "kruskal.test",
+                             label.y = 110) 
+

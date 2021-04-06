@@ -15,8 +15,9 @@ df_biomass_clean <- read.csv("biomass_12_Mar.csv",  row.names = 1)
 
 df_pc<- read.csv("pc_12_Mar.csv",  row.names = 1) 
 
+df_rangescore <- read.csv("df_range_score_12_Mar.csv", row.names = 1)
 
-metadata<- read.csv("meta_12_Mar.csv")
+metadata<- read.csv("metadata.csv")
 
 fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
 
@@ -107,48 +108,60 @@ legume_no_shrub_a_div <- data.frame(
 #------forb including legumes
 
 #shannon
-forb_inc_legume_mod1  <- lmer(exp(forb_inc_legume_a_div$forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+forb_inc_legume_mod1  <- lmer(exp(forb_inc_legume_a_div$forb_shan) ~  metadata$treatment *(metadata$site)+ (1|metadata$grid) + (1|metadata$site))
 plot(forb_inc_legume_mod1)
 plot(resid(forb_inc_legume_mod1))
 lattice::qqmath(forb_inc_legume_mod1)
 shapiro.test(resid(forb_inc_legume_mod1))
 anova(forb_inc_legume_mod1)
 
-boxplot(forb_inc_legume_a_div$forb_shan ~ metadata$treatment)
+boxplot(forb_inc_legume_a_div$forb_shan ~ metadata$treatment*metadata$site)
 kruskal.test(forb_inc_legume_a_div$forb_shan ~ metadata$treatment)
 
+
+forb_inc_legume_mod2  <- lmer(exp(forb_inc_legume_a_div$forb_shan) ~  df_rangescore$range_score *(metadata$site)+ (1|metadata$grid) + (1|metadata$site))
+plot(forb_inc_legume_mod2)
+plot(resid(forb_inc_legume_mod2))
+lattice::qqmath(forb_inc_legume_mod2)
+shapiro.test(resid(forb_inc_legume_mod2))
+anova(forb_inc_legume_mod2)
+
+boxplot(forb_inc_legume_a_div$forb_shan ~ metadata$treatment*metadata$site)
+kruskal.test(forb_inc_legume_a_div$forb_shan ~ metadata$treatment)
 #richness
-forb_inc_legume_mod2  <- glmer((forb_inc_legume_a_div$forb_rich) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), family ="poisson")
-summary(forb_inc_legume_mod2)
+forb_inc_legume_mod2  <- glmer((forb_inc_legume_a_div$forb_rich) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) , family ="poisson")
+Anova(forb_inc_legume_mod2)
 
 
-boxplot(forb_inc_legume_a_div$forb_rich ~ metadata$treatment)
+boxplot(forb_inc_legume_a_div$forb_rich ~ metadata$treatment*metadata$site)
 
 #----forb no legume
 
 #shannon
-forb_no_legume_mod1  <- lmer(exp(forb_no_legume_a_div$forb_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+forb_no_legume_mod1  <- lmer(exp(forb_no_legume_a_div$forb_shan) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
 plot(forb_no_legume_mod1)
 plot(resid(forb_no_legume_mod1))
 lattice::qqmath(forb_no_legume_mod1)
 shapiro.test(resid(forb_no_legume_mod1))
 anova(forb_no_legume_mod1)
 
-boxplot(forb_no_legume_a_div$forb_shan ~ metadata$treatment)
+boxplot(forb_no_legume_a_div$forb_shan ~ metadata$treatment*metadata$site)
+
+
 kruskal.test(forb_no_legume_a_div$forb_shan ~ metadata$treatment)
 
 #richness
-forb_no_legume_mod2  <- glmer((forb_no_legume_a_div$forb_rich) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), family ="poisson")
-summary(forb_no_legume_mod2)
+forb_no_legume_mod2  <- glmer((forb_no_legume_a_div$forb_rich) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) , family ="poisson")
+Anova(forb_no_legume_mod2)
 
 
-boxplot(forb_no_legume_a_div$forb_rich ~ metadata$treatment)
+boxplot(forb_no_legume_a_div$forb_rich ~ metadata$treatment*metadata$site)
 
 
 #  grass ---------------------------------------------------------
 
 #shannon
-Grass_mod1  <- lmer(exp(Grass_a_div$Grass_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+Grass_mod1  <- lmer(exp(Grass_a_div$Grass_shan) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
 plot(Grass_mod1)
 plot(resid(Grass_mod1))
 
@@ -157,29 +170,29 @@ shapiro.test(resid(Grass_mod1))
 anova(Grass_mod1)
 hist(Grass_a_div$Grass_shan)
 
-boxplot(Grass_a_div$Grass_shan ~ metadata$treatment)
+boxplot(Grass_a_div$Grass_shan ~ metadata$treatment*metadata$site)
 kruskal.test(Grass_a_div$Grass_shan ~ metadata$treatment)
 
 #richness
-Grass_mod2  <- glmer((Grass_a_div$Grass_rich) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site), family ="poisson")
-summary(Grass_mod2)
+Grass_mod2  <- glmer((Grass_a_div$Grass_rich) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) , family ="poisson")
+Anova(Grass_mod2)
 
 
-boxplot(Grass_a_div$Grass_rich ~ metadata$treatment)
+boxplot(Grass_a_div$Grass_rich ~ metadata$treatment*metadata$site)
 
 
 # legume ------------------------------------------------------------------
 
 #no shrubs
 #shannon 
-legume_no_shrub_mod1  <- lmer(exp(legume_no_shrub_a_div$legume_shan) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+legume_no_shrub_mod1  <- lmer(exp(legume_no_shrub_a_div$legume_shan) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
 plot(legume_no_shrub_mod1)
 plot(resid(legume_no_shrub_mod1))
 lattice::qqmath(legume_no_shrub_mod1)
 shapiro.test(resid(legume_no_shrub_mod1))
 anova(legume_no_shrub_mod1)
 
-boxplot(legume_no_shrub_a_div$legume_shan ~ metadata$treatment)
+boxplot(legume_no_shrub_a_div$legume_shan ~ metadata$treatment*metadata$site)
 kruskal.test(legume_no_shrub_a_div$legume_shan ~ metadata$treatment)
 
 #richness
@@ -228,7 +241,7 @@ Exotic_a_div <- data.frame(
   Exotic_rich_prop = specnumber(Exotic_pc))
 
 ###poor residuals for all alpha diversity metric
-Exotic_mod1  <- lmer(log1p(Exotic_a_div$Exotic_simp) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+Exotic_mod1  <- lmer(log1p(Exotic_a_div$Exotic_simp) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
 plot(Exotic_mod1)
 plot(resid(Exotic_mod1))
 
@@ -237,7 +250,7 @@ shapiro.test(resid(Exotic_mod1))
 anova(Exotic_mod1)
 hist(Exotic_a_div$Exotic_shan)
 
-boxplot(Exotic_a_div$Exotic_shan ~ metadata$treatment)
+boxplot(Exotic_a_div$Exotic_shan ~ metadata$treatment*metadata$site)
 kruskal.test(Exotic_a_div$Exotic_shan ~ metadata$treatment)
 
 #Proportion of exotic biomass
@@ -246,7 +259,7 @@ prop_exotic_biomass <- rowSums(Exotic_biomass)/rowSums(df_biomass_clean)
 quantile(prop_exotic_biomass)
 
 
-mod_exo_biomass <- lmer(exp(prop_exotic_biomass) ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+mod_exo_biomass <- lmer(exp(prop_exotic_biomass) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
 plot(mod_exo_biomass)
 plot(resid(mod_exo_biomass))
 
@@ -255,7 +268,7 @@ shapiro.test(resid(mod_exo_biomass))
 anova(mod_exo_biomass)
 hist(resid(mod_exo_biomass))
 
-boxplot(Exotic_a_div$Exotic_shan ~ metadata$treatment)
+boxplot(prop_exotic_biomass ~ metadata$treatment*metadata$site)
 kruskal.test(Exotic_a_div$Exotic_shan ~ metadata$treatment)
 
 ####native
@@ -275,7 +288,7 @@ Native_a_div <- data.frame(
   Native_rich_prop = specnumber(Native_pc))
 
 ###poor residuals for all alpha diversity metric
-Native_mod1  <- lmer(Native_a_div$Native_rich_prop ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+Native_mod1  <- glmer((Native_a_div$Native_rich_prop) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid), family = "poisson" )
 plot(Native_mod1)
 plot(resid(Native_mod1))
 
@@ -285,7 +298,9 @@ shapiro.test(resid(Native_mod1))
 car::Anova(Native_mod1, test = "F")
 hist(Native_a_div$Native_shan)
 
-boxplot(Native_a_div$Native_rich_prop ~ metadata$treatment)
+boxplot(Native_a_div$Native_rich_prop ~ metadata$treatment*metadata$site)
+
+
 kruskal.test(Native_a_div$Native_rich_prop ~ metadata$treatment)
 
 ##native vs treatment & exotic
@@ -340,4 +355,26 @@ plot(palatable_mod)
 plot(resid(palatable_mod))
 car::vif(palatable_mod)
 lattice::qqmath(palatable_mod)
+
+#percent cover
+
+#Proportion of exotic cover
+
+prop_exotic_cover <- rowSums(Exotic_pc)/rowSums(df_pc)
+
+mod_exo_cover <- lmer(sqrt(prop_exotic_cover) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
+plot(mod_exo_cover)
+plot(resid(mod_exo_cover))
+
+
+#Proportion of Native cover
+
+prop_Native_cover <- rowSums(Native_pc)/rowSums(df_pc)
+
+mod_nat_cover <- lmer(exp(prop_Native_cover) ~  metadata$treatment * (metadata$site)+ (1|metadata$grid) )
+plot(mod_nat_cover)
+plot(resid(mod_nat_cover))
+anova(mod_nat_cover)
+
+
 
