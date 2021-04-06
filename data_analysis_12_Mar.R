@@ -5,6 +5,8 @@ library(tidyverse)
 library(vegan)
 library(lme4)
 library(lmerTest)
+library(emmeans)
+library(multcomp)
 
 
 
@@ -41,12 +43,7 @@ plot(resid(mod.shan1))
 shapiro.test(resid(mod.shan1))
 lattice::qqmath(mod.shan1)
 boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
-
-
-
-
-boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
-
+shannon.emmeans<-cld(emmeans(mod.shan1,~treatment*site))
 
 
 
