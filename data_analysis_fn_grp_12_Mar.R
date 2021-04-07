@@ -15,9 +15,9 @@ df_biomass_clean <- read.csv("biomass_12_Mar.csv",  row.names = 1)
 
 df_pc<- read.csv("pc_12_Mar.csv",  row.names = 1) 
 
-df_rangescore <- read.csv("df_range_score_12_Mar.csv", row.names = 1)
+df_rangescore <- read.csv("df_range_score.csv", row.names = 1)
 
-metadata<- read.csv("metadata.csv")
+metadata<- read.csv("metadata.csv") 
 
 fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
 
@@ -25,7 +25,88 @@ fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
 # Data analysis -----------------------------------------------------------
 
 
+# Native non-native data wrangle -------------------------------------------------------
 
+native <- which((fn_grp$exotic == "N"))
+exotic <- which((fn_grp$exotic == "Y"))
+
+##### native #####
+native_cover <- df_pc %>% 
+  select(all_of(native))
+
+native_biomass <-  df_biomass_clean %>% 
+  select(all_of(native))
+
+##### exotic #####
+
+exotic_cover <- df_pc %>% 
+  select(all_of(exotic))
+
+exotic_biomass <-  df_biomass_clean %>% 
+  select(all_of(exotic))
+
+
+
+# native not native data analysis -----------------------------------------
+bm <- rowSums(df_biomass_clean)
+pc <- rowSums(df_pc)
+
+mod.native.biomass <- lmer(sqrt(rowSums(native_biomass)/bm) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(mod.native.biomass))
+shapiro.test(resid(mod.native.biomass))
+plot(resid(mod.native.biomass))
+anova(mod.native.biomass )
+
+
+mod.native.cover <- lmer(sqrt(rowSums(native_cover)/pc) ~ metadata$treatment * metadata$site +  (1|metadata$grid))
+hist(resid(mod.native.cover))
+shapiro.test(resid(mod.native.cover))
+plot(resid(mod.native.cover))
+anova(mod.native.cover)
+
+
+# exotic ------------------------------------------------------------------
+mod.exotic.biomass <- lmer(sqrt(rowSums(exotic_biomass)/bm) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(mod.exotic.biomass))
+shapiro.test(resid(mod.exotic.biomass))
+plot(resid(mod.exotic.biomass))
+anova(mod.exotic.biomass )
+
+
+mod.exotic.cover <- lmer(sqrt(rowSums(exotic_cover)) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(mod.exotic.cover))
+shapiro.test(resid(mod.exotic.cover))
+plot(resid(mod.exotic.cover))
+anova(mod.exotic.cover)
+
+
+# ratio exotic/native -----------------------------------------------------
+
+
+
+exo_nativ <- lmer(sqrt(rowSums(exotic_biomass)/rowSums(native_biomass)) ~  
+                    metadata$treatment * metadata$site + (1|metadata$grid))
+
+hist(resid(exo_nativ))
+plot(resid(exo_nativ))
+range(rowSums(exotic_biomass)/rowSums(native_biomass))
+anova(exo_nativ)
+
+multcomp::cld(emmeans::emmeans(exo_nativ,~treatment* site))
+plot(multcomp::cld(emmeans::emmeans(exo_nativ, ~ treatment)))
+multcomp::cld(emmeans::emmeans(exo_nativ, "treatment", by = c("site")))
+
+
+exo_nativ_cover <- lmer(log1p(rowSums(exotic_cover)/rowSums(native_cover)) ~  
+                    metadata$treatment * metadata$site + (1|metadata$grid))
+
+hist(resid(exo_nativ_cover))
+plot(resid(exo_nativ_cover))
+range(rowSums(exotic_cover)/rowSums(native_cover))
+anova(exo_nativ_cover)
+
+kruskal.test(rowSums(exotic_cover)/rowSums(native_cover) ~ metadata$treatment)
+boxplot(rowSums(exotic_cover)/rowSums(native_cover) ~ metadata$treatment)
 
 # Forbs and grasses -------------------------------------------------------
 
@@ -45,7 +126,7 @@ forb_no_legume_pc <- df_pc %>%
   select(all_of(forb_no_legume))
 
 forb_no_legume_biomass <- df_biomass_clean %>% 
-  select(all_of(forb_no_legume))
+select(all_of(forb_no_legume))
 
 
 Grass <- which((fn_grp$life_form == "Grass"))

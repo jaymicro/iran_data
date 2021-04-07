@@ -17,7 +17,7 @@ df_biomass_clean <- read.csv("biomass_12_Mar.csv",  row.names = 1)
 
 df_pc<- read.csv("pc_12_Mar.csv",  row.names = 1) 
 
-df_rangescore <- read.csv("df_range_score_12_Mar.csv", row.names = 1)
+df_rangescore <- read.csv("df_range_score.csv", row.names = 1)
 
 metadata<- read.csv("metadata.csv")
 
@@ -185,6 +185,28 @@ ggplot(plt_df, aes(x = value, y = sqrt(biomass)))+
   stat_smooth(method = "lm")
 
 car::vif(mod_bm)
+
+
+
+# litter vs site and treatment --------------------------------------------
+lit <- decostand(df_rangescore$litter_dry, method = "hellinger", MARGIN = 2)
+
+mod.litter <- lmer(df_rangescore$litter_dry ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(mod.litter))
+shapiro.test(resid(mod.litter))
+anova(mod.litter)
+cld(emmeans(mod.litter,~treatment*site))
+
+df_rangescore$treatment <- metadata$treatment
+df_rangescore$site <- metadata$site
+
+boxplot(df_rangescore$litter_dry ~ metadata$treatment * metadata$site)
+
+ggplot(df_rangescore, aes(x = treatment, y = litter_dry)) +
+  geom_boxplot()+
+  facet_grid( ~ site, scales = "free_y")+
+  ggpubr::stat_compare_means(method = "t.test")
+
 # Multivariate analysis ---------------------------------------------------
 
 
