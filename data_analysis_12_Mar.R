@@ -5,6 +5,8 @@ library(tidyverse)
 library(vegan)
 library(lme4)
 library(lmerTest)
+library(emmeans)
+library(multcomp)
 
 
 
@@ -15,9 +17,9 @@ df_biomass_clean <- read.csv("biomass_12_Mar.csv",  row.names = 1)
 
 df_pc<- read.csv("pc_12_Mar.csv",  row.names = 1) 
 
-df_rangescore <- read.csv("df_range_score_12_Mar.csv", row.names = 1)
+df_rangescore <- read.csv("df_range_score.csv", row.names = 1)
 
-metadata<- read.csv("meta_12_Mar.csv")
+metadata<- read.csv("metadata.csv")
 
 fn_grp <- readxl::read_xlsx("meta_fg.xlsx")
 
@@ -34,18 +36,20 @@ div_metric <- data.frame(
   simpson_index = diversity(as.matrix(df_pc), index = "simpson", MARGIN = 1, base = exp(1)),
   biomass = rowSums(df_biomass_clean))
 
-mod4 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+mod.shan1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment * metadata$site + (1|metadata$grid))
 
-anova(mod4)
-plot(resid(mod4))
-shapiro.test(resid(mod4))
-lattice::qqmath(mod4)
-boxplot(div_metric$Shannon_index ~ metadata$treatment)
+anova(mod.shan1)
+plot(resid(mod.shan1))
+shapiro.test(resid(mod.shan1))
+lattice::qqmath(mod.shan1)
+boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
+shannon.emmeans<-cld(emmeans(mod.shan1,~treatment*site))
+
 
 
 # Simpson index -----------------------------------------------------------
 
-mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment + (1|metadata$grid) + (1|metadata$site))
+mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment * metadata$site + (1|metadata$grid) )
 anova(mod3)
 plot(resid(mod3))
 hist(resid(mod3))
@@ -53,11 +57,19 @@ hist(resid(mod3))
 shapiro.test(resid(mod3))
 
 kruskal.test(div_metric$simpson_index ~ metadata$treatment)
-boxplot(div_metric$simpson_index ~ metadata$treatment)
+boxplot(div_metric$simpson_index ~ metadata$treatment * metadata$site)
+
+# Richness ----------------------------------------------------------------
+
+mod_rich <- glmer(div_metric$species_richness ~ metadata$treatment * metadata$site + (1|metadata$grid), family="poisson")
+
+Anova(mod_rich)
+
+boxplot(div_metric$species_richness ~ metadata$treatment * metadata$site)
 
 
 # Productivity ------------------------------------------------------------
-pd_mod1 <- lmer(sqrt(bm) ~ treatment + (1|site) + (1|grid), metadata, REML = F)
+pd_mod1 <- lmer(sqrt(bm) ~ treatment * site + (1|grid), metadata, REML = F)
 plot(pd_mod1)
 plot(resid(pd_mod1))
 lattice::qqmath(pd_mod1)
@@ -65,19 +77,56 @@ lattice::qqmath(pd_mod1)
 shapiro.test(resid(pd_mod1))
 anova(pd_mod1)
 
-boxplot(sqrt(metadata$bm) ~ metadata$treatment)
+boxplot(sqrt(metadata$bm) ~ metadata$treatment * metadata$site)
 
 # functional groups - see data_analysis_fn_grp_12_Mar.R -------------------------------------------------------
-
+# all groups are having similar responses with fg, also did exotic and native but not meeting normality
 
 ##rangescore
-range_mod <- lmer(df_rangescore$range_score ~  metadata$treatment + (1|metadata$grid) + (1|metadata$site))
-plot(range_mod)
-plot(resid(range_mod))
-lattice::qqmath(range_mod)
-anova(range_mod)
-boxplot(df_rangescore$range_class ~ metadata$treatment)
+df_rangescore$range_score[df_rangescore$range_score > 100] <- 100  
 
+mod.site.score <- lmer((df_rangescore$range_score) ~ metadata$treatment *metadata$site  + (1|metadata$grid))
+anova(mod.site.score)
+plot(resid(mod.site.score))
+shapiro.test(resid(mod.site.score))
+lattice::qqmath(mod.site.score)
+
+boxplot(df_rangescore$range_score ~ metadata$treatment*metadata$site)
+
+mod.site.score <- glmer(metadata$treatment~  (df_rangescore$range_score) *metadata$site  + (1|metadata$grid), family = "binomial")
+Anova(mod.site.score)
+plot(resid(mod.site.score))
+shapiro.test(resid(mod.site.score))
+lattice::qqmath(mod.site.score)
+
+boxplot(df_rangescore$range_score ~ metadata$treatment*metadata$site)
+
+
+
+#create new variable to adjust for range score
+
+
+# which(metadata$score==0)
+# 
+# df_pc%>%
+#   slice(194, 196, 198, 200)%>%
+#   rowSums()
+#   View()
+
+df_rangescore$range_score <- replace(df_rangescore$range_score, which(df_rangescore$range_score==0), c(68, 74, 72, 67.5))
+
+metadata=metadata%>%
+  mutate(shan=div_metric$Shannon_index,
+         score=df_rangescore$range_score,
+         shan.score=shan/(score/100+1))
+
+mod.shan.score <- lmer((metadata$shan.score) ~ metadata$treatment *metadata$site  + (1|metadata$grid))
+anova(mod.shan.score)
+plot(resid(mod.shan.score))
+shapiro.test(resid(mod.shan.score))
+lattice::qqmath(mod.shan.score)
+
+boxplot(metadata$shan.score ~ metadata$treatment*metadata$site)
 
 # Biomass by functional group ---------------------------------------------
 p_forb_biomass$bio_prop <- rowSums(p_forb_biomass)/metadata$bm
@@ -136,6 +185,28 @@ ggplot(plt_df, aes(x = value, y = sqrt(biomass)))+
   stat_smooth(method = "lm")
 
 car::vif(mod_bm)
+
+
+
+# litter vs site and treatment --------------------------------------------
+lit <- decostand(df_rangescore$litter_dry, method = "hellinger", MARGIN = 2)
+
+mod.litter <- lmer(df_rangescore$litter_dry ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(mod.litter))
+shapiro.test(resid(mod.litter))
+anova(mod.litter)
+cld(emmeans(mod.litter,~treatment*site))
+
+df_rangescore$treatment <- metadata$treatment
+df_rangescore$site <- metadata$site
+
+boxplot(df_rangescore$litter_dry ~ metadata$treatment * metadata$site)
+
+ggplot(df_rangescore, aes(x = treatment, y = litter_dry)) +
+  geom_boxplot()+
+  facet_grid( ~ site, scales = "free_y")+
+  ggpubr::stat_compare_means(method = "t.test")
+
 # Multivariate analysis ---------------------------------------------------
 
 
@@ -145,11 +216,14 @@ set.seed(1234)
 veg_permanova <- adonis(dist_bray ~ metadata$treatment + metadata$elevation + metadata$avg_temp +
          metadata$avg_ppt + metadata$aspect,parallel = getOption("mc.cores"))
 
+
 set.seed(121)
 veg_anosim1 <- anosim(dist_bray, metadata$treatment, parallel = getOption("mc.cores"))
+veg_anosim1
 
 set.seed(123456)
 veg_anosim2 <- anosim(dist_bray, metadata$elevation, parallel = getOption("mc.cores"))
+veg_anosim2
 
 spe.hel <- decostand(df_pc, "hellinger")
 bc<-vegdist(spe.hel, method="bray", binary=FALSE) 
@@ -159,7 +233,7 @@ biplot(pc)
 
 pc_hel <- ape::pcoa(bc)
 biplot(pc_hel)
-pc_hel$values
+pc_hel$values[1:2,]
 
 
 set.seed(124)
