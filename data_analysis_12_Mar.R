@@ -68,17 +68,29 @@ ph_shann_report$site <- factor(ph_shann_report$site, levels = c("masouleh","maz_
 
 # Plot shannon ------------------------------------------------------------
 
+site = c(
+  maz_po = "Polour",
+  masouleh = "Masouleh",
+  maz_java = "Javaherdeh"
+)
+
 ggplot(div_metric, aes(x = treatment, y = exp(Shannon_index), fill = treatment)) +
   geom_violin(aes(x = treatment, y = exp(Shannon_index)), alpha = 0.6) +
-  facet_grid(. ~ site, space = "free") +
-  geom_boxplot(aes(x = treatment, y = exp(Shannon_index)), alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
+  facet_grid(. ~ site, labeller = labeller(site = site)) +
+  geom_boxplot(aes(x = treatment, y = exp(Shannon_index)), 
+               alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
   geom_text(data= shann_tst, aes(label = .group, y = 0 + 13),
             position = position_dodge(0.9), vjust = -1) +
-  ggeasy::easy_all_text_size( 16)+
-  scale_fill_aaas(name = "Treatment",
+   scale_fill_aaas(name = "Treatment",
                    label = c("Exclosure", "Grazing")) +
 labs(x = NULL, y = expression(e^"Shannon diversity"), size = 16)+
-    theme_bw() 
+    theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.title.y = element_text(size = 16),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+ggsave(filename = "shann_index.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 # Simpson index -----------------------------------------------------------
 
@@ -94,11 +106,53 @@ boxplot(div_metric$simpson_index ~ metadata$treatment * metadata$site)
 
 # Richness ----------------------------------------------------------------
 
-mod_rich <- glmer(div_metric$species_richness ~ metadata$treatment * metadata$site + (1|metadata$grid), family="poisson")
+mod_rich <- glmer(species_richness ~ treatment * site + (1|grid), family="poisson", data = div_metric)
 
-Anova(mod_rich)
+car::Anova(mod_rich)
 
 boxplot(div_metric$species_richness ~ metadata$treatment * metadata$site)
+
+# posthoc test ------------------------------------------------------------
+
+post_hoc <- emmeans(mod_rich, list(pairwise ~ treatment*site), adjust = "tukey")
+multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)
+plot(multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters))
+
+rich_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters) %>% 
+  as.data.frame()
+
+
+
+ph_rich_report <- shann_tst %>% 
+  dplyr::select(c(site, .group, treatment)) %>% 
+ arrange(row.names(.))
+
+
+# plot richness -----------------------------------------------------------
+
+site = c(
+  maz_po = "Polour",
+  masouleh = "Masouleh",
+  maz_java = "Javaherdeh"
+)
+
+ggplot(div_metric, aes(x = treatment, y = species_richness, fill = treatment)) +
+  geom_violin(aes(x = treatment, y = species_richness), alpha = 0.6) +
+  facet_grid(. ~ site, labeller = labeller(site = site)) +
+  geom_boxplot(aes(x = treatment, y = species_richness), 
+               alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
+  geom_text(data = ph_rich_report, aes(x = treatment,label = .group, y = 0 + 22.5),
+             vjust = -1, inherit.aes = F) +
+  scale_fill_aaas(name = "Treatment",
+                  label = c("Exclosure", "Grazing")) +
+  labs(x = NULL, y = "Richness", size = 14)+
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.title.y = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+ggsave(filename = "richness_index.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 
 # Productivity ------------------------------------------------------------
@@ -111,6 +165,42 @@ shapiro.test(resid(pd_mod1))
 anova(pd_mod1)
 
 boxplot(sqrt(metadata$bm) ~ metadata$treatment * metadata$site)
+
+#posthoc test -------------------------------------------------------
+
+post_hoc <- emmeans(pd_mod1, list(pairwise ~ treatment*site), adjust = "tukey")
+multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)
+plot(multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters))
+
+pd_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters) %>% 
+  as.data.frame()
+
+
+
+prodd_tst <-pd_tst %>% 
+  dplyr::select(c(site, .group, treatment)) %>% 
+  arrange(row.names(.))
+
+
+# Plot productivity -------------------------------------------------------
+
+ggplot(div_metric, aes(x = treatment, y = sqrt(bm), fill = treatment)) +
+  geom_violin(aes(x = treatment, y = sqrt(bm)), alpha = 0.6) +
+  facet_grid(. ~ site, labeller = labeller(site = site)) +
+  geom_boxplot(aes(x = treatment, y = sqrt(bm)), 
+               alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
+  geom_text(data = prodd_tst, aes(x = treatment,label = .group, y = 0 + 35.5),
+            vjust = -1, inherit.aes = F) +
+  scale_fill_aaas(name = "Treatment",
+                  label = c("Exclosure", "Grazing")) +
+  labs(x = NULL, y = expression(sqrt("ANPP")), size = 14)+
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.title.y = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+ggsave(filename = "ANPP.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 # functional groups - see data_analysis_fn_grp_12_Mar.R -------------------------------------------------------
 # all groups are having similar responses with fg, also did exotic and native but not meeting normality

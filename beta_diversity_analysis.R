@@ -100,8 +100,8 @@ rda_score <- as.data.frame(summary(rda.mod)$biplot[,1:2])
 library(ggord)
 ggord::ggord(rda.mod, grp_in = metadata$site) 
 
-names_factor <- c("Elevation ", "Slope", "MAT", "MAP", "Total Biomass", "Range score", "Grass biomass",
-                  "Legume Biomass", "Forb Biomass", "Litter Biomass", "Exotic cover", "Native cover")
+names_factor <- c("Elevation ", "Slope", "MAT", "MAP", "Total biomass", "Range score", "Grass biomass",
+                  "Legume biomass", "Forb biomass", "Litter biomass", "Exotic cover", "Native cover")
 
 rownames(rda_score) <- names_factor
 
@@ -128,7 +128,7 @@ rda.plot <- ggplot(plt_beta, aes(PC1, PC2 , color  = treatment,  shape = site))+
  
   
 rda.plot
-ggsave(rda.plot, filename = "rda.plt.jpg", width = 12, height = 8, units = "in", dpi = 600)
+ggsave(rda.plot, filename = "rda.plt.jpg", width = 12, height = 8, units = "in", dpi = 1000)
 
 str(grass_bm)
 set.seed(123)
