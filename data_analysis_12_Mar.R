@@ -7,6 +7,7 @@ library(lme4)
 library(lmerTest)
 library(emmeans)
 library(multcomp)
+library(ggsci)
 
 
 
@@ -34,9 +35,12 @@ div_metric <- data.frame(
   species_richness = specnumber(df_pc),
   Shannon_index = diversity(as.matrix(df_pc), index = "shannon", MARGIN = 1, base = exp(1)),
   simpson_index = diversity(as.matrix(df_pc), index = "simpson", MARGIN = 1, base = exp(1)),
-  biomass = rowSums(df_biomass_clean))
+  biomass = rowSums(df_biomass_clean),
+  metadata)
 
-mod.shan1 <- lmer(exp(div_metric$Shannon_index) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+div_metric$site <- factor(div_metric$site, levels = c("maz_po","masouleh","maz_java"  ))
+
+mod.shan1 <- lmer(exp(Shannon_index) ~ treatment*site + (1|metadata$grid), data = div_metric)
 
 anova(mod.shan1)
 plot(resid(mod.shan1))
@@ -45,7 +49,36 @@ lattice::qqmath(mod.shan1)
 boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
 shannon.emmeans<-cld(emmeans(mod.shan1,~treatment*site))
 
+# posthoc test ------------------------------------------------------------
 
+post_hoc <- emmeans(mod.shan1, list(pairwise ~ treatment*site), adjust = "tukey")
+multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)
+plot(multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters))
+
+shann_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters) %>% 
+  as.data.frame()
+
+
+
+ph_shann_report <- shann_tst %>% 
+  mutate(treatments = paste(treatment, site)) %>% 
+  mutate(group = str_trim(.group, side = "both"))
+ph_shann_report$site <- factor(ph_shann_report$site, levels = c("masouleh","maz_java", "maz_po" ))
+
+
+# Plot shannon ------------------------------------------------------------
+
+ggplot(div_metric, aes(x = treatment, y = exp(Shannon_index), fill = treatment)) +
+  geom_violin(aes(x = treatment, y = exp(Shannon_index)), alpha = 0.6) +
+  facet_grid(. ~ site, space = "free") +
+  geom_boxplot(aes(x = treatment, y = exp(Shannon_index)), alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
+  geom_text(data= shann_tst, aes(label = .group, y = 0 + 13),
+            position = position_dodge(0.9), vjust = -1) +
+  ggeasy::easy_all_text_size( 16)+
+  scale_fill_aaas(name = "Treatment",
+                   label = c("Exclosure", "Grazing")) +
+labs(x = NULL, y = expression(e^"Shannon diversity"), size = 16)+
+    theme_bw() 
 
 # Simpson index -----------------------------------------------------------
 
