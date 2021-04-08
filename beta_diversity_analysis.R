@@ -100,7 +100,7 @@ rda_score <- as.data.frame(summary(rda.mod)$biplot[,1:2])
 library(ggord)
 ggord::ggord(rda.mod, grp_in = metadata$site) 
 
-names_factor <- c("Elevation ", "Slope", "MAT", "MAP", "Total Biomass", "Range scroe", "Grass biomass",
+names_factor <- c("Elevation ", "Slope", "MAT", "MAP", "Total Biomass", "Range score", "Grass biomass",
                   "Legume Biomass", "Forb Biomass", "Litter Biomass", "Exotic cover", "Native cover")
 
 rownames(rda_score) <- names_factor
@@ -119,16 +119,16 @@ rda.plot <- ggplot(plt_beta, aes(PC1, PC2 , color  = treatment,  shape = site))+
   ggeasy::easy_all_text_size(size = 14) +
   geom_segment(data = rda_score, aes(x=0, xend=RDA1, y=0, yend=RDA2),
                    arrow=arrow(length=unit(0.01,"npc")), inherit.aes = FALSE) +
-  geom_label(data = rda_score,aes(x=RDA1, y = RDA2), label = row.names(rda_score), check_overlap = TRUE, inherit.aes = F) +
+  geom_label(data = rda_score,aes(x=RDA1, y = RDA2,check_overlap = TRUE), label = row.names(rda_score),  inherit.aes = F) +
   guides(col=guide_legend("Treatment"),
          shape=guide_legend("Site")) +
   scale_shape_manual(values = c(2,6,7),
                      labels = c("Masouleh", "Javaherdeh", "Polour" )) +
-  expand_limits(x = c(-0.8, 06))
+  expand_limits(x = c(-0.8, 0.8))
  
   
 rda.plot
-ggsave(rda.plot, filename = "rda.plt.jpg", width = 12, height = 8, units = "in", dpi = 1200)
+ggsave(rda.plot, filename = "rda.plt.jpg", width = 12, height = 8, units = "in", dpi = 600)
 
 str(grass_bm)
 set.seed(123)
