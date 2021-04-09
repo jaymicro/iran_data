@@ -75,11 +75,11 @@ site = c(
 )
 
 ggplot(div_metric, aes(x = treatment, y = exp(Shannon_index), fill = treatment)) +
-  geom_violin(aes(x = treatment, y = exp(Shannon_index)), alpha = 0.6) +
+  geom_violin(aes(x = treatment, y = exp(Shannon_index)), alpha = 0.7) +
   facet_grid(. ~ site, labeller = labeller(site = site)) +
   geom_boxplot(aes(x = treatment, y = exp(Shannon_index)), 
                alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
-  geom_text(data= shann_tst, aes(label = .group, y = 0 + 13),
+  geom_text(data= ph_shann_report, aes(label = group, y = 0 + 13),
             position = position_dodge(0.9), vjust = -1) +
    scale_fill_aaas(name = "Treatment",
                    label = c("Exclosure", "Grazing")) +
@@ -89,7 +89,8 @@ labs(x = NULL, y = expression(e^"Shannon diversity"), size = 16)+
         axis.ticks.x = element_blank(),
         axis.title.y = element_text(size = 16),
         legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14))
+        legend.title = element_text(size = 14),
+        panel.grid = element_blank())
 ggsave(filename = "shann_index.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 # Simpson index -----------------------------------------------------------
@@ -125,7 +126,9 @@ rich_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = lette
 
 ph_rich_report <- shann_tst %>% 
   dplyr::select(c(site, .group, treatment)) %>% 
- arrange(row.names(.))
+ arrange(row.names(.))%>% 
+  mutate(treatments = paste(treatment, site)) %>% 
+  mutate(group = str_trim(.group, side = "both"))
 
 
 # plot richness -----------------------------------------------------------
@@ -141,7 +144,7 @@ ggplot(div_metric, aes(x = treatment, y = species_richness, fill = treatment)) +
   facet_grid(. ~ site, labeller = labeller(site = site)) +
   geom_boxplot(aes(x = treatment, y = species_richness), 
                alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
-  geom_text(data = ph_rich_report, aes(x = treatment,label = .group, y = 0 + 22.5),
+  geom_text(data = ph_rich_report, aes(x = treatment,label = group, y = 0 + 22.5),
              vjust = -1, inherit.aes = F) +
   scale_fill_aaas(name = "Treatment",
                   label = c("Exclosure", "Grazing")) +
@@ -151,7 +154,8 @@ ggplot(div_metric, aes(x = treatment, y = species_richness, fill = treatment)) +
         axis.ticks.x = element_blank(),
         axis.title.y = element_text(size = 14),
         legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14))
+        legend.title = element_text(size = 14),
+        panel.grid = element_blank())
 ggsave(filename = "richness_index.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 
@@ -180,7 +184,10 @@ pd_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters
 
 prodd_tst <-pd_tst %>% 
   dplyr::select(c(site, .group, treatment)) %>% 
-  arrange(row.names(.))
+  arrange(row.names(.))%>% 
+  mutate(treatments = paste(treatment, site)) %>% 
+  mutate(group = str_trim(.group, side = "both"))
+
 
 
 # Plot productivity -------------------------------------------------------
@@ -190,7 +197,7 @@ ggplot(div_metric, aes(x = treatment, y = sqrt(bm), fill = treatment)) +
   facet_grid(. ~ site, labeller = labeller(site = site)) +
   geom_boxplot(aes(x = treatment, y = sqrt(bm)), 
                alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
-  geom_text(data = prodd_tst, aes(x = treatment,label = .group, y = 0 + 35.5),
+  geom_text(data = prodd_tst, aes(x = treatment,label = group, y = 0 + 35.5),
             vjust = -1, inherit.aes = F) +
   scale_fill_aaas(name = "Treatment",
                   label = c("Exclosure", "Grazing")) +
@@ -200,7 +207,8 @@ ggplot(div_metric, aes(x = treatment, y = sqrt(bm), fill = treatment)) +
         axis.ticks.x = element_blank(),
         axis.title.y = element_text(size = 14),
         legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14))
+        legend.title = element_text(size = 14),
+        panel.grid = element_blank())
 ggsave(filename = "ANPP.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 # functional groups - see data_analysis_fn_grp_12_Mar.R -------------------------------------------------------
