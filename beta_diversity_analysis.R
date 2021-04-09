@@ -59,14 +59,14 @@ plt <- ggplot(plt_beta, aes(PC1, PC2 , color  = treatment,  shape = site))+
   scale_shape_manual(values = c(2,6,7),
                      labels = c("Masouleh", "Javaherdeh", "Polour" ))
 
-plt_withoutbold <- ggplot(plt_beta, aes(PC1, PC2 , color  = treatment,  shape = site))+
-  geom_point(size = 4, alpha = 0.7,   show.legend = F) +
-  stat_ellipse(geom = "polygon",level = 0.95, alpha = 0.3,  show.legend = F) +
+plt_withoutbold <- ggplot(plt_beta, aes(PC1, PC2 , fill = treatment,  shape = site), color  = black)+
+  geom_point(size = 4,aes(fill = treatment), show.legend = T) +
+  stat_ellipse(geom = "polygon",level = 0.95, alpha=0.33,  show.legend = F) +
   theme_bw() +
   theme(panel.grid = element_blank())+
   labs(x = "PCo axis 1 (5.5 %)",
        y = "PCo axis 1 (3.9 %)") +
-  ggsci::scale_color_aaas(labels = c("Exclosure", "Grazing")) +
+  ggsci::scale_fill_aaas(name = "Treatment", labels = c("Exclosure", "Grazing")) +
   ggeasy::easy_all_text_color("black") +
   ggeasy::easy_all_text_size(size = 14) +
   annotate(geom = "text",
@@ -76,12 +76,13 @@ plt_withoutbold <- ggplot(plt_beta, aes(PC1, PC2 , color  = treatment,  shape = 
            label = c(expression(paste(Treatment~~~~~~~~~~~~~~ R^2 ~"=" ~"0.07"~";" ~ "p <0.001,")),
                      expression(paste(Site~~~~~~~~~~~~~~~~~~~~~~~~ R^2 ~"=" ~"0.29"~";" ~ "p <0.001,")),
                      expression(paste(Site:Treatment~~~~ R^2 ~"="~"0.17"~";" ~ "p <0.001,"))))+
-  guides(col=guide_legend("Treatment"),
-         shape=guide_legend("Site")) +
-  scale_shape_manual(values = c(2,6,7),
-                     labels = c("Masouleh", "Javaherdeh", "Polour" ))
-             
+  scale_shape_manual(name = "Site",
+                     values = c(21,24,25),
+                     labels = c("Masouleh", "Javaherdeh", "Polour" )) +
+  guides(fill=guide_legend(override.aes=list(shape=21))) 
+
 plt_withoutbold
+
 ggsave(plt_withoutbold, filename = "beta_diversity.jpg", width = 12, height = 8, units = "in", dpi = 1200)
 
 grass_bm <- rowSums(Grass_biomass)/plt_beta$bm
@@ -107,28 +108,29 @@ rownames(rda_score) <- names_factor
 
 
 
-rda.plot <- ggplot(plt_beta, aes(PC1, PC2 , color  = treatment,  shape = site))+
-  geom_point(size = 4, alpha = 0.7) +
-  stat_ellipse(geom = "polygon",level = 0.95, alpha = 0.3,  show.legend = F) +
+rda.plot <-ggplot(plt_beta, aes(PC1, PC2 , fill = treatment,  shape = site), color  = black)+
+  geom_point(size = 4,aes(fill = treatment), show.legend = T) +
+  stat_ellipse(geom = "polygon",level = 0.95, alpha=0.33,  show.legend = F) +
   theme_bw() +
   theme(panel.grid = element_blank())+
-  labs(x = "RDA 1 (28.2 %)",
-       y = "RDA 1 (21.9 %)") +
-  ggsci::scale_color_aaas(labels = c("Exclosure", "Grazing")) +
+  ggsci::scale_fill_aaas(name = "Treatment", labels = c("Exclosure", "Grazing")) +
   ggeasy::easy_all_text_color("black") +
   ggeasy::easy_all_text_size(size = 14) +
-  geom_segment(data = rda_score, aes(x=0, xend=RDA1, y=0, yend=RDA2),
-                   arrow=arrow(length=unit(0.01,"npc")), inherit.aes = FALSE) +
-  geom_label(data = rda_score,aes(x=RDA1, y = RDA2,check_overlap = TRUE), label = row.names(rda_score),  inherit.aes = F) +
-  guides(col=guide_legend("Treatment"),
-         shape=guide_legend("Site")) +
-  scale_shape_manual(values = c(2,6,7),
+  scale_shape_manual(name = "Site",
+                     values = c(21,24,25),
                      labels = c("Masouleh", "Javaherdeh", "Polour" )) +
-  expand_limits(x = c(-0.8, 0.8))
- 
+  guides(fill=guide_legend(override.aes=list(shape=21))) +
+  geom_segment(data = rda_score, aes(x=0, xend=RDA1, y=0, yend=RDA2),
+               arrow=arrow(length=unit(0.01,"npc")), inherit.aes = FALSE) +
+  geom_label(data = rda_score,aes(x=RDA1, y = RDA2,check_overlap = TRUE), label = row.names(rda_score),  inherit.aes = F)+
+  expand_limits(x = c(-0.75, 0.7)) +
+  labs(x = "RDA 1 (28.2 %)",
+       y = "RDA 1 (21.9 %)")
   
+
+
 rda.plot
-ggsave(rda.plot, filename = "rda.plt.jpg", width = 12, height = 8, units = "in", dpi = 1000)
+ggsave(rda.plot, filename = "rda.plt.jpg", width = 12, height = 8, units = "in", dpi = 1200)
 
 str(grass_bm)
 set.seed(123)
