@@ -170,7 +170,8 @@ boxplot(sqrt(metadata$bm) ~ metadata$treatment * metadata$site)
 
 post_hoc <- emmeans(pd_mod1, list(pairwise ~ treatment*site), adjust = "tukey")
 multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)
-plot(multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters))
+plot(multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)) +
+  expand_limits(x = 35)
 
 pd_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters) %>% 
   as.data.frame()
