@@ -214,10 +214,16 @@ ggsave(filename = "ANPP.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 # functional groups - see data_analysis_fn_grp_12_Mar.R -------------------------------------------------------
 # all groups are having similar responses with fg, also did exotic and native but not meeting normality
 
-##rangescore
+
+# Range score analysis ----------------------------------------------------
+
+metadata$range_score <- df_rangescore$range_score
+
+metadata$site <- factor(metadata$site, levels = c("maz_po", "masouleh","maz_java"))
+
 df_rangescore$range_score[df_rangescore$range_score > 100] <- 100  
 
-mod.site.score <- lmer((df_rangescore$range_score) ~ metadata$treatment *metadata$site  + (1|metadata$grid))
+mod.site.score <- lmer(range_score ~ treatment *site  + (1|grid), metadata)
 anova(mod.site.score)
 plot(resid(mod.site.score))
 shapiro.test(resid(mod.site.score))
@@ -233,7 +239,51 @@ lattice::qqmath(mod.site.score)
 
 boxplot(df_rangescore$range_score ~ metadata$treatment*metadata$site)
 
+#posthoc test -------------------------------------------------------
 
+post_hoc <- emmeans(mod.site.score, list(pairwise ~ treatment*site), adjust = "tukey")
+multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)
+plot(multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters)) +
+  expand_limits(x = 35)
+
+range_tst <- multcomp::cld(post_hoc$`emmeans of treatment, site`, Letters = letters) %>% 
+  as.data.frame()
+
+
+
+range_tst <-range_tst %>% 
+  dplyr::select(c(site, .group, treatment, emmean)) %>% 
+  arrange(row.names(.))%>% 
+  mutate(treatments = paste(treatment, site)) %>% 
+  mutate(group = str_trim(.group, side = "both")) %>% 
+  mutate(site = factor(site, levels = c("maz_po", "masouleh","maz_java")))
+
+
+# plot rangescore  --------------------------------------------------------
+site = c(
+  maz_po = "Polour",
+  masouleh = "Masouleh",
+  maz_java = "Javaherdeh"
+)
+
+ggplot(metadata, aes(x = treatment, y = range_score, fill = treatment)) +
+  geom_violin(aes(x = treatment, y = range_score), alpha = 0.6) +
+  facet_grid(. ~ site, labeller = labeller(site = site)) +
+  geom_boxplot(aes(x = treatment, y = range_score), 
+               alpha = 0.75, width = 0.25, lwd = 1, show.legend = F)  +
+  geom_text(data = range_tst, aes(x = treatment,label = group, y = 101),
+            vjust = -1, inherit.aes = F) +
+  scale_fill_aaas(name = "Treatment",
+                  label = c("Exclosure", "Grazing")) +
+  labs(x = NULL, y = "Range score", size = 14)+
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.title.y = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        panel.grid = element_blank())
+ggsave(filename = "range_score.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
 #create new variable to adjust for range score
 
