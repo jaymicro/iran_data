@@ -93,6 +93,28 @@ labs(x = NULL, y = expression(e^"Shannon diversity"), size = 16)+
         panel.grid = element_blank())
 ggsave(filename = "shann_index.jpg", width = 8, height = 6, dpi = 1200, units = "in")
 
+
+#---------including biomass
+
+
+mod.shan.anpp <- lmer(exp(Shannon_index) ~ treatment*site*biomass + (1|metadata$grid), data = div_metric)
+
+anova(mod.shan.anpp)
+plot(resid(mod.shan.anpp))
+shapiro.test(resid(mod.shan.anpp))
+lattice::qqmath(mod.shan.anpp)
+boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
+shannon.emmeans<-cld(emmeans(mod.shan.anpp,~treatment*site))
+
+
+mod.anpp.shan <- lmer(biomass ~ treatment*site*Shannon_index + (1|metadata$grid), data = div_metric)
+
+anova(mod.anpp.shan)
+plot(resid(mod.anpp.shan))
+shapiro.test(resid(mod.anpp.shan))
+lattice::qqmath(mod.anpp.shan)
+boxplot(div_metric$Shannon_index ~ metadata$treatment* metadata$site)
+shannon.emmeans<-cld(emmeans(mod.anpp.shan,~treatment*site)
 # Simpson index -----------------------------------------------------------
 
 mod3 <- lmer(exp(div_metric$simpson_index) ~ metadata$treatment * metadata$site + (1|metadata$grid) )

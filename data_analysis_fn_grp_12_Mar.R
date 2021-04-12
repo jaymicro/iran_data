@@ -459,3 +459,76 @@ anova(mod_nat_cover)
 
 
 
+#-------class - palatability
+
+# class data wrangle -------------------------------------------------------
+
+class_I <- which((fn_grp$class == "I"))
+class_II <- which((fn_grp$class == "II"))
+class_III <- which((fn_grp$class == "III"))
+
+
+
+##### class I #####
+class_I_cover <- df_pc %>% 
+  dplyr::select(all_of(class_I))
+
+class_I_biomass <-  df_biomass_clean %>% 
+  dplyr::select(all_of(class_I))
+
+##### class II #####
+class_II_cover <- df_pc %>% 
+  dplyr::select(all_of(class_II))
+
+class_II_biomass <-  df_biomass_clean %>% 
+  dplyr::select(all_of(class_II))
+
+
+##### class III #####
+class_III_cover <- df_pc %>% 
+  dplyr::select(all_of(class_III))
+
+class_III_biomass <-  df_biomass_clean %>% 
+  dplyr::select(all_of(class_III))
+
+bm <- rowSums(df_biomass_clean)
+pc <- rowSums(df_pc)
+
+I_bm = rowSums(class_I_biomass/bm)
+I_pc_tot = rowSums(class_I_cover/pc)
+I_pc = rowSums(class_I_cover)
+
+II_bm = rowSums(class_II_biomass/bm)
+II_pc_tot = rowSums(class_II_cover/pc)
+II_pc = rowSums(class_II_cover)
+
+III_bm = rowSums(class_III_biomass/bm)
+III_pc_tot = rowSums(class_III_cover/pc)
+III_pc = rowSums(class_III_cover)
+
+# -----------------------------------------
+
+
+
+I_pc_lmer <- lmer(sqrt(I_pc) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(I_pc_lmer))
+shapiro.test(resid(I_pc_lmer))
+plot(resid(I_pc_lmer))
+anova(I_pc_lmer )
+boxplot(sqrt(I_pc) ~ metadata$treatment * metadata$site)
+
+II_pc_lmer <- lmer(sqrt(II_pc) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(II_pc_lmer))
+shapiro.test(resid(II_pc_lmer))
+plot(resid(II_pc_lmer))
+anova(II_pc_lmer )
+boxplot(sqrt(II_pc) ~ metadata$treatment * metadata$site)
+
+III_pc_lmer <- lmer(sqrt(III_pc) ~ metadata$treatment * metadata$site + (1|metadata$grid))
+hist(resid(III_pc_lmer))
+shapiro.test(resid(III_pc_lmer))
+plot(resid(III_pc_lmer))
+anova(III_pc_lmer )
+boxplot(sqrt(III_pc) ~ metadata$treatment * metadata$site)
+
+
